@@ -82,39 +82,53 @@ def _parse_time(raw: str) -> time | None:
     return None
 
 
+def _parse_node(blob: str, i: int) -> tuple[CalendarNode | None, int]:
+    """Parse one ``( prefix ( data )( children ) )`` node starting at ``blob[i]``.
+
+    Returns (node, next_index). A node owns three paren groups — its own, its
+    data list, and its children list — and every one must be consumed, or
+    sibling nodes leak up into the parent.
+    """
+    n = len(blob)
+    i += 1  # consume the node's opening '('
+    j = blob.find("(", i)
+    if j == -1:
+        return None, n
+    prefix = blob[i:j].strip()
+    node = CalendarNode(name=prefix.split("|")[-1].strip() if prefix else "")
+    k = blob.find(")", j + 1)
+    if k == -1:
+        return node, n
+    data_raw = blob[j + 1 : k]
+    if data_raw:
+        toks = data_raw.split("|")
+        for a in range(0, len(toks) - 1, 2):
+            node.data[toks[a].strip()] = toks[a + 1]
+    i = k + 1
+    if i < n and blob[i] == "(":  # children list
+        i += 1
+        while i < n and blob[i] != ")":
+            if blob[i] == "(":
+                child, i = _parse_node(blob, i)
+                if child is not None:
+                    node.children.append(child)
+            else:
+                i += 1
+        i += 1  # consume the children list's ')'
+    if i < n and blob[i] == ")":
+        i += 1  # consume the node's own closing ')'
+    return node, i
+
+
 def parse_tree(blob: str) -> CalendarNode:
     """Parse the raw blob into a node tree (tolerant of malformed input)."""
     root = CalendarNode(name="<root>")
-    stack = [root]
     i, n = 0, len(blob)
     while i < n:
-        ch = blob[i]
-        if ch == "(":
-            # A node starts: read up to the inner '(' that opens the data list.
-            j = blob.find("(", i + 1)
-            if j == -1:
-                break
-            prefix = blob[i + 1 : j]
-            name = prefix.split("|")[-1] if prefix else ""
-            k = blob.find(")", j + 1)
-            if k == -1:
-                break
-            data_raw = blob[j + 1 : k]
-            node = CalendarNode(name=name)
-            if data_raw:
-                toks = data_raw.split("|")
-                for a in range(0, len(toks) - 1, 2):
-                    node.data[toks[a]] = toks[a + 1]
-            stack[-1].children.append(node)
-            # After data comes an optional '(' children list.
-            i = k + 1
-            if i < n and blob[i] == "(":
-                stack.append(node)
-                i += 1
-        elif ch == ")":
-            if len(stack) > 1:
-                stack.pop()
-            i += 1
+        if blob[i] == "(":
+            node, i = _parse_node(blob, i)
+            if node is not None:
+                root.children.append(node)
         else:
             i += 1
     return root
