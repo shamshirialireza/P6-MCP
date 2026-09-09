@@ -40,11 +40,22 @@ class Workspace:
         return p
 
     def validate_write(self, path: str) -> Path:
-        """Resolve a write path inside allowed/output dirs (parents may not exist yet)."""
+        """Resolve a write path inside allowed/output dirs (parents may not exist yet).
+
+        Symlinks are resolved on the deepest existing ancestor — on macOS
+        ``/tmp`` is a symlink to ``/private/tmp``, so comparing unresolved
+        strings would reject a path that is genuinely inside an allowed
+        directory.
+        """
         p = Path(path).expanduser()
         if not p.is_absolute():
             p = self.output_dir / p
         p = Path(os.path.normpath(p))
+        anchor = p
+        while not anchor.exists() and anchor != anchor.parent:
+            anchor = anchor.parent
+        if anchor.exists():
+            p = anchor.resolve() / p.relative_to(anchor)
         if not self._inside_allowed(p):
             raise WorkspaceError(
                 f"{path!r} is outside the allowed output locations",

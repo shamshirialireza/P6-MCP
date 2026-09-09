@@ -162,11 +162,21 @@ def diff_schedules(
     }
 
 
-def schedule_trend(schedules: list[tuple[str, Schedule]]) -> dict[str, Any]:
-    """Key metrics across a series of updates (ordered as given)."""
+def schedule_trend(
+    schedules: list[tuple[str, Schedule]], project_short_name: str | None = None
+) -> dict[str, Any]:
+    """Key metrics across a series of updates (ordered as given).
+
+    ``project_short_name`` scopes every update to one project; without it each
+    file's non-baseline projects are aggregated.
+    """
     rows: list[dict[str, Any]] = []
     for label, s in schedules:
-        projects = s.active_projects or s.projects
+        projects = (
+            s.resolve_projects(project_short_name=project_short_name)
+            if project_short_name
+            else (s.active_projects or s.projects)
+        )
         prog = progress_summary(s, projects)
         ev = earned_value(s, projects, time_phased=False)
         crit = sum(
