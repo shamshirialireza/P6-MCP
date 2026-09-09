@@ -4,21 +4,21 @@ ERMHDR	19.12	2024-02-05	Project	admin	Fixture User	fixturedb	Project Management	
 %R	1000	1	101	10	100	N		N	Y	CP_Drtn	TT_Mile	DT_FixedDrtn	TK_Complete	A1000	Notice to Proceed				0	0	0	0	0					2024-01-02 08:00	2024-01-02 08:00								2024-01-02 08:00	2024-01-02 08:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1001	1	101	10	100	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Complete	A1010	Design Criteria				0	0	0	0	40					2024-01-02 08:00	2024-01-08 16:00								2024-01-02 08:00	2024-01-08 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1002	1	101	10	100	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Complete	A1020	Preliminary Design				0	0	0	0	80					2024-01-09 08:00	2024-01-22 16:00								2024-01-09 08:00	2024-01-22 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1003	1	101	10	50	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Active	A1030	Detailed Design		0	0	64	0	0	0	120					2024-01-23 08:00		2024-02-05 08:00	2024-02-12 16:00		2024-02-05 08:00	2024-02-12 16:00			2024-01-23 08:00	2024-02-12 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1003	1	101	10	50	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Active	A1030	Detailed Design		0	0	64	0	0	0	120					2024-01-23 08:00		2024-02-05 08:00	2024-02-14 16:00		2024-02-05 08:00	2024-02-14 16:00			2024-01-23 08:00	2024-02-12 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1004	1	101	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A1040	Design Review		0	0	40	0	0	0	40							2024-02-15 08:00	2024-02-21 16:00		2024-02-15 08:00	2024-02-21 16:00			2024-02-15 08:00	2024-02-21 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1005	1	101	10	50	N		N	Y	CP_Drtn	TT_LOE	DT_FixedDrtn	TK_Active	A1050	Engineering Management		0	0	240	0	0	0	360					2024-01-02 08:00		2024-02-05 08:00	2024-03-04 16:00		2024-02-05 08:00	2024-03-04 16:00			2024-01-02 08:00	2024-03-04 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1005	1	101	10	50	N		N	Y	CP_Drtn	TT_LOE	DT_FixedDrtn	TK_Active	A1050	Engineering Management		128	0	240	0	0	0	360					2024-01-02 08:00		2024-02-27 08:00	2024-04-08 16:00		2024-02-05 08:00	2024-04-08 16:00			2024-01-02 08:00	2024-03-04 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1006	1	102	10	100	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Complete	A2000	Issue RFQ				0	0	0	0	24					2024-01-23 08:00	2024-01-25 16:00								2024-01-23 08:00	2024-01-25 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1007	1	102	10	50	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Active	A2010	Evaluate Bids		0	0	16	0	0	0	40					2024-01-26 08:00		2024-02-05 08:00	2024-02-01 16:00		2024-02-05 08:00	2024-02-01 16:00			2024-01-26 08:00	2024-02-01 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1008	1	102	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A2020	Award PO		40	0	16	0	0	0	16							2024-02-13 08:00	2024-02-14 16:00		2024-02-07 08:00	2024-02-08 16:00			2024-02-07 08:00	2024-02-08 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1009	1	102	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A2030	Fabrication & Delivery		40	0	120	0	0	0	120							2024-02-15 08:00	2024-03-06 16:00		2024-02-09 08:00	2024-02-29 16:00			2024-02-09 08:00	2024-02-29 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1007	1	102	10	50	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_Active	A2010	Evaluate Bids		80	0	16	0	0	0	40					2024-01-26 08:00		2024-02-19 08:00	2024-02-20 16:00		2024-02-05 08:00	2024-02-06 16:00			2024-01-26 08:00	2024-02-01 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1008	1	102	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A2020	Award PO		80	0	16	0	0	0	16							2024-02-21 08:00	2024-02-22 16:00		2024-02-07 08:00	2024-02-08 16:00			2024-02-07 08:00	2024-02-08 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1009	1	102	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A2030	Fabrication & Delivery		80	0	120	0	0	0	120							2024-02-23 08:00	2024-03-14 16:00		2024-02-09 08:00	2024-02-29 16:00			2024-02-09 08:00	2024-02-29 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1010	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3000	Mobilize		0	0	40	0	0	0	40				2024-02-22 08:00			2024-02-22 08:00	2024-02-28 16:00		2024-02-22 08:00	2024-02-28 16:00			2024-02-22 08:00	2024-02-28 16:00			CS_MSO										Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1011	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3010	Foundations		0	0	80	0	0	0	80							2024-02-29 08:00	2024-03-13 16:00		2024-02-29 08:00	2024-03-13 16:00			2024-02-29 08:00	2024-03-13 16:00													Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1012	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3020	Structural Steel		0	0	64	0	0	0	64							2024-03-14 08:00	2024-03-25 16:00		2024-03-14 08:00	2024-03-25 16:00			2024-03-14 08:00	2024-03-25 16:00													Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1013	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3030	Site Works		64	0	64	0	0	0	64							2024-03-11 08:00	2024-03-20 16:00		2024-02-29 08:00	2024-03-11 16:00			2024-02-29 08:00	2024-03-11 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1013	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3030	Site Works		80	0	64	0	0	0	64							2024-03-14 08:00	2024-03-25 16:00		2024-02-29 08:00	2024-03-11 16:00			2024-02-29 08:00	2024-03-11 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1014	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3040	Finishes		0	0	40	0	0	0	40							2024-03-26 08:00	2024-04-01 16:00		2024-03-26 08:00	2024-04-01 16:00			2024-03-26 08:00	2024-04-01 16:00													Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1015	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3050	Punchlist		0	0	24	0	0	0	24							2024-04-04 08:00	2024-04-08 16:00		2024-04-04 08:00	2024-04-08 16:00			2024-04-04 08:00	2024-04-08 16:00													Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1016	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3060	Long Duration Buffer		400	0	480	0	0	0	480							2024-05-01 08:00	2024-07-23 16:00		2024-02-22 08:00	2024-05-15 16:00			2024-02-22 08:00	2024-05-15 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
-%R	1017	1	103	10	0	N		N	Y	CP_Drtn	TT_FinMile	DT_FixedDrtn	TK_NotStart	A9000	Project Complete		0	0	0	0	0	0	0							2024-04-08 08:00	2024-04-08 16:00		2024-04-08 08:00	2024-04-08 16:00			2024-04-08 08:00	2024-04-08 16:00													Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1016	1	103	10	0	N		N	Y	CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3060	Long Duration Buffer		64	0	200	0	0	0	200							2024-03-05 08:00	2024-04-08 16:00		2024-02-22 08:00	2024-03-27 16:00			2024-02-22 08:00	2024-03-27 16:00													N					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
+%R	1017	1	103	10	0	N		N	Y	CP_Drtn	TT_FinMile	DT_FixedDrtn	TK_NotStart	A9000	Project Complete		0	0	0	0	0	0	0							2024-04-08 16:00	2024-04-08 16:00		2024-04-08 16:00	2024-04-08 16:00			2024-04-08 16:00	2024-04-08 16:00													Y					2024-01-01 09:00	2024-02-05 08:00	admin	admin		
 %R	1018	2	203	10	0					CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3000	Mobilize		0		40				40							2024-02-20 08:00	2024-02-26 16:00		2024-02-20 08:00	2024-02-26 16:00			2024-02-20 08:00	2024-02-26 16:00													Y										
 %R	1019	2	203	10	0					CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3010	Foundations		0		80				80							2024-02-27 08:00	2024-03-11 16:00		2024-02-27 08:00	2024-03-11 16:00			2024-02-27 08:00	2024-03-11 16:00													Y										
 %R	1020	2	203	10	0					CP_Drtn	TT_Task	DT_FixedDrtn	TK_NotStart	A3020	Structural Steel		0		64				64							2024-03-12 08:00	2024-03-21 16:00		2024-03-12 08:00	2024-03-21 16:00			2024-03-12 08:00	2024-03-21 16:00													Y										
@@ -63,7 +63,7 @@ ERMHDR	19.12	2024-02-05	Project	admin	Fixture User	fixturedb	Project Management	
 %R	5007	1007	1006	1	1	PR_FS	0				
 %R	5008	1008	1007	1	1	PR_FS	0				
 %R	5009	1009	1008	1	1	PR_FS	0				
-%R	5010	1012	1009	1	1	PR_FS	0				
+%R	5010	1012	1009	1	1	PR_FS	-8				
 %R	5011	1010	1004	1	1	PR_FS	0				
 %R	5012	1011	1010	1	1	PR_FS	0				
 %R	5013	1012	1011	1	1	PR_FS	0				
@@ -72,7 +72,7 @@ ERMHDR	19.12	2024-02-05	Project	admin	Fixture User	fixturedb	Project Management	
 %R	5016	1014	1013	1	1	PR_FS	0				
 %R	5017	1015	1014	1	1	PR_FS	16				
 %R	5018	1017	1015	1	1	PR_FS	0				
-%R	5019	1016	1010	1	1	PR_SS	-8				
+%R	5019	1016	1010	1	1	PR_SS	0				
 %T	ROLES
 %F	role_id	parent_role_id	seq_num	role_name	role_short_name	def_cost_qty_link_flag	cost_qty_type
 %R	50		1	Engineer	ENG	Y	QT_Hour
