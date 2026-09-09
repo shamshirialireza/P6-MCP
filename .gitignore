@@ -1,0 +1,16 @@
+.venv/
+.idea/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+dist/
+build/
+*.egg-info/
+tests/fixtures/xer/large_50k.xer
+tests/fixtures/xer/medium_5k.xer
+.env
+site/

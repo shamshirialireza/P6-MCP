@@ -1,0 +1,102 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "p6-mcp"
+version = "1.0.0"
+description = "Production-grade MCP server for Primavera P6 XER schedule files: parse, query, analyze, compare, modify, and export."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Alireza Shamshiri", email = "shamshiri.alirezall@gmail.com" }]
+keywords = [
+    "primavera", "p6", "xer", "mcp", "model-context-protocol",
+    "scheduling", "cpm", "dcma", "earned-value", "construction",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Scheduling",
+    "Typing :: Typed",
+]
+dependencies = [
+    "mcp[cli]>=1.2.0",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.2",
+]
+
+[project.optional-dependencies]
+excel = ["openpyxl>=3.1"]
+charts = ["matplotlib>=3.8"]
+http = ["uvicorn>=0.30", "starlette>=0.37"]
+all = ["p6-mcp[excel,charts,http]"]
+
+[project.scripts]
+p6-mcp = "p6_mcp.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/alirezashamshiri/P6-MCP"
+Documentation = "https://alirezashamshiri.github.io/P6-MCP/"
+Repository = "https://github.com/alirezashamshiri/P6-MCP"
+Issues = "https://github.com/alirezashamshiri/P6-MCP/issues"
+Changelog = "https://github.com/alirezashamshiri/P6-MCP/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "hypothesis>=6.100",
+    "mypy>=1.10",
+    "ruff>=0.5",
+    "pre-commit>=3.7",
+    "openpyxl>=3.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/p6_mcp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "C4", "RUF"]
+ignore = ["E501", "SIM108", "B905"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+mypy_path = "src"
+packages = ["p6_mcp"]
+
+[[tool.mypy.overrides]]
+module = ["openpyxl.*", "matplotlib.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["src/p6_mcp"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+]
