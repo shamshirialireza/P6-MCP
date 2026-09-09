@@ -66,6 +66,33 @@ def fmt(dt: datetime | None) -> str:
     return dt.strftime("%Y-%m-%d %H:%M") if dt else ""
 
 
+def _dt(m: int, d: int, h: int = 8) -> datetime:
+    return datetime(2024, m, d, h)
+
+
+#: Hand-verified CPM truth for incomplete DEMO activities:
+#: code -> (early_start, early_finish, late_start, late_finish, total_float_hours)
+EXPECTED_CPM: dict[str, tuple[datetime, datetime, datetime, datetime, float]] = {
+    "A1030": (_dt(2, 5), _dt(2, 14, 16), _dt(2, 5), _dt(2, 14, 16), 0.0),
+    "A1040": (_dt(2, 15), _dt(2, 21, 16), _dt(2, 15), _dt(2, 21, 16), 0.0),
+    "A1050": (_dt(2, 5), _dt(4, 8, 16), _dt(2, 27), _dt(4, 8, 16), 128.0),
+    "A2010": (_dt(2, 5), _dt(2, 6, 16), _dt(2, 19), _dt(2, 20, 16), 80.0),
+    "A2020": (_dt(2, 7), _dt(2, 8, 16), _dt(2, 21), _dt(2, 22, 16), 80.0),
+    "A2030": (_dt(2, 9), _dt(2, 29, 16), _dt(2, 23), _dt(3, 14, 16), 80.0),
+    "A3000": (_dt(2, 22), _dt(2, 28, 16), _dt(2, 22), _dt(2, 28, 16), 0.0),
+    "A3010": (_dt(2, 29), _dt(3, 13, 16), _dt(2, 29), _dt(3, 13, 16), 0.0),
+    "A3020": (_dt(3, 14), _dt(3, 25, 16), _dt(3, 14), _dt(3, 25, 16), 0.0),
+    "A3030": (_dt(2, 29), _dt(3, 11, 16), _dt(3, 14), _dt(3, 25, 16), 80.0),
+    "A3040": (_dt(3, 26), _dt(4, 1, 16), _dt(3, 26), _dt(4, 1, 16), 0.0),
+    "A3050": (_dt(4, 4), _dt(4, 8, 16), _dt(4, 4), _dt(4, 8, 16), 0.0),
+    "A3060": (_dt(2, 22), _dt(3, 27, 16), _dt(3, 5), _dt(4, 8, 16), 64.0),
+    "A9000": (_dt(4, 8, 16), _dt(4, 8, 16), _dt(4, 8, 16), _dt(4, 8, 16), 0.0),
+}
+
+#: Project-level truth for golden tests.
+EXPECTED_PROJECT_FINISH = _dt(4, 8, 16)
+
+
 class XerBuilder:
     """Accumulates tables/rows and renders XER text."""
 
@@ -374,10 +401,28 @@ class DemoSchedule:
             start_day=date(2024, 3, 26), driving=True)
         add("A3050", "Punchlist", 103, 3, status="TK_NotStart",
             start_day=date(2024, 4, 4), driving=True)  # 2d lag after A3040
-        add("A3060", "Long Duration Buffer", 103, 60, status="TK_NotStart",
-            start_day=date(2024, 2, 22), float_hours=400)
+        add("A3060", "Long Duration Buffer", 103, 25, status="TK_NotStart",
+            start_day=date(2024, 2, 22), float_hours=64)
         add("A9000", "Project Complete", 103, 0, status="TK_NotStart",
             start_day=date(2024, 4, 8), task_type="TT_FinMile", driving=True)
+        self._apply_cpm_expected()
+
+    def _apply_cpm_expected(self) -> None:
+        """Overwrite stored dates/float with hand-verified CPM truth so golden
+        tests can assert exact agreement between stored and recomputed values."""
+        for code, (es, ef, ls, lf, tf) in EXPECTED_CPM.items():
+            row = self.tasks[code]
+            row["total_float_hr_cnt"] = tf
+            row["late_start_date"] = ls
+            row["late_end_date"] = lf
+            if row["status_code"] == "TK_Active":
+                row["early_start_date"] = es
+                row["early_end_date"] = ef
+            elif row["status_code"] == "TK_NotStart":
+                row["early_start_date"] = es
+                row["early_end_date"] = ef
+                row["target_start_date"] = es
+                row["target_end_date"] = ef
 
     def _logic(self) -> None:
         for pred, succ, typ, lag in [
@@ -386,12 +431,12 @@ class DemoSchedule:
             ("A1000", "A1050", "PR_SS", 0), ("A9000", "A1050", "PR_FF", 0),
             ("A1020", "A2000", "PR_FS", 0), ("A2000", "A2010", "PR_FS", 0),
             ("A2010", "A2020", "PR_FS", 0), ("A2020", "A2030", "PR_FS", 0),
-            ("A2030", "A3020", "PR_FS", 0),
+            ("A2030", "A3020", "PR_FS", -8),  # lead on a non-driving link (DCMA #2)
             ("A1040", "A3000", "PR_FS", 0), ("A3000", "A3010", "PR_FS", 0),
             ("A3010", "A3020", "PR_FS", 0), ("A3000", "A3030", "PR_FS", 0),
             ("A3020", "A3040", "PR_FS", 0), ("A3030", "A3040", "PR_FS", 0),
             ("A3040", "A3050", "PR_FS", 16), ("A3050", "A9000", "PR_FS", 0),
-            ("A3000", "A3060", "PR_SS", -8),  # negative lag (lead) for DCMA
+            ("A3000", "A3060", "PR_SS", 0),
         ]:
             self.link(pred, succ, typ, lag)
 
