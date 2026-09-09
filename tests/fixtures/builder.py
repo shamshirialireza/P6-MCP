@@ -617,6 +617,11 @@ class DemoSchedule:
     def _baseline(self) -> None:
         # Baseline (proj 2) mirrors the construction chain, two days earlier.
         for code, name, dur, start in [
+            ("A1000", "Notice to Proceed", 0, date(2024, 1, 2)),
+            ("A1010", "Design Criteria", 5, date(2024, 1, 2)),
+            ("A1020", "Preliminary Design", 10, date(2024, 1, 9)),
+            ("A1030", "Detailed Design", 15, date(2024, 1, 23)),
+            ("A1040", "Design Review", 5, date(2024, 2, 13)),
             ("A3000", "Mobilize", 5, date(2024, 2, 20)),
             ("A3010", "Foundations", 10, date(2024, 2, 27)),
             ("A3020", "Structural Steel", 8, date(2024, 3, 12)),
@@ -626,9 +631,11 @@ class DemoSchedule:
             tid = self.next_task_id
             self.next_task_id += 1
             es, ef = span(start, max(dur, 1))
-            ttype = "TT_FinMile" if code == "A9000" else "TT_Task"
+            ttype = {"A9000": "TT_FinMile", "A1000": "TT_Mile"}.get(code, "TT_Task")
             if ttype == "TT_FinMile":
                 es = ef = datetime.combine(next_workday(start), time(16))
+            elif ttype == "TT_Mile":
+                es = ef = datetime.combine(next_workday(start), time(8))
             self.b.add("TASK", TASK_FIELDS, {
                 "task_id": tid, "proj_id": 2, "wbs_id": 203, "clndr_id": 10,
                 "phys_complete_pct": 0, "complete_pct_type": "CP_Drtn",
