@@ -1,0 +1,9 @@
+ERMHDR	8.0	2010-01-01	Project	admin	Old User	db	PM	USD
+%R	999	orphan-row
+%T	FUTURETBL
+%F	col_a	col_b
+%R	1	x	EXTRA
+SOMETHING	else
+%T	PROJECT
+%F	proj_id	proj_short_name
+%R	1	MALF
