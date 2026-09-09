@@ -14,3 +14,4 @@ tests/fixtures/xer/large_50k.xer
 tests/fixtures/xer/medium_5k.xer
 .env
 site/
+graphify-out/
