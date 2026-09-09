@@ -8,10 +8,11 @@ source of truth.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 from p6_mcp.exceptions import FileAccessError, XerParseError
 from p6_mcp.parser import coercion
@@ -67,7 +68,7 @@ class ErmHdr:
 class Table:
     """One XER table: ordered field names + raw string rows."""
 
-    __slots__ = ("name", "fields", "rows", "_field_index", "_typed_cache")
+    __slots__ = ("_field_index", "_typed_cache", "fields", "name", "rows")
 
     def __init__(self, name: str, fields: list[str]) -> None:
         self.name = name

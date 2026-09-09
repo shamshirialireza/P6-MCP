@@ -23,16 +23,19 @@ def wbs_rollup(
         subtree = sch.wbs_descendant_ids(w.wbs_id)
         acts = [a for wid in subtree for a in sch.activities_by_wbs.get(wid, [])]
         if not acts:
-            out.append({
-                "wbs_id": w.wbs_id, "path": sch.wbs_path(w.wbs_id), "level": lvl,
-                "wbs_name": w.name, "activity_count": 0,
-            })
+            out.append(
+                {
+                    "wbs_id": w.wbs_id,
+                    "path": sch.wbs_path(w.wbs_id),
+                    "level": lvl,
+                    "wbs_name": w.name,
+                    "activity_count": 0,
+                }
+            )
             continue
         od = sum(a.original_duration_hours for a in acts)
         rd = sum(a.remaining_duration_hours for a in acts)
-        weighted_pct = sum(
-            a.original_duration_hours * a.percent_complete() for a in acts
-        )
+        weighted_pct = sum(a.original_duration_hours * a.percent_complete() for a in acts)
         costs = {"budgeted": 0.0, "actual": 0.0, "remaining": 0.0}
         qty = {"budgeted": 0.0, "actual": 0.0, "remaining": 0.0}
         for a in acts:

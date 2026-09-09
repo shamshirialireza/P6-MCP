@@ -17,8 +17,13 @@ def activity_costs(sch: Schedule, a: Activity) -> dict[str, float]:
     """budgeted/actual/remaining cost of one activity (assignments + expenses),
     with labor/nonlabor/material/expense split of the budget."""
     out = {
-        "budgeted": 0.0, "actual": 0.0, "remaining": 0.0,
-        "labor": 0.0, "nonlabor": 0.0, "material": 0.0, "expense": 0.0,
+        "budgeted": 0.0,
+        "actual": 0.0,
+        "remaining": 0.0,
+        "labor": 0.0,
+        "nonlabor": 0.0,
+        "material": 0.0,
+        "expense": 0.0,
     }
     for x in sch.assignments_by_task.get(a.task_id, []):
         out["budgeted"] += x.budgeted_cost
@@ -37,8 +42,7 @@ def activity_costs(sch: Schedule, a: Activity) -> dict[str, float]:
     return out
 
 
-def _group_keys(sch: Schedule, a: Activity, group_by: str, code_type: str | None
-                ) -> list[str]:
+def _group_keys(sch: Schedule, a: Activity, group_by: str, code_type: str | None) -> list[str]:
     if group_by == "activity":
         return [a.code]
     if group_by == "wbs":
@@ -88,16 +92,11 @@ def _group_keys(sch: Schedule, a: Activity, group_by: str, code_type: str | None
     if group_by == "activity_code":
         codes = sch.codes_by_task.get(a.task_id, [])
         if code_type:
-            codes = [
-                c for c in codes
-                if str(c.get("code_type") or "").lower() == code_type.lower()
-            ]
-        return sorted(
-            {f"{c.get('code_type')}: {c.get('code_value')}" for c in codes}
-        ) or ["(unassigned)"]
-    raise InvalidArgumentError(
-        f"Unknown group_by {group_by!r}", hint=f"Use one of {GROUP_BYS}"
-    )
+            codes = [c for c in codes if str(c.get("code_type") or "").lower() == code_type.lower()]
+        return sorted({f"{c.get('code_type')}: {c.get('code_value')}" for c in codes}) or [
+            "(unassigned)"
+        ]
+    raise InvalidArgumentError(f"Unknown group_by {group_by!r}", hint=f"Use one of {GROUP_BYS}")
 
 
 def cost_summary(
@@ -112,16 +111,30 @@ def cost_summary(
     cost to each matching key, so multi-keyed activities appear under each.
     """
     groups: dict[str, dict[str, float]] = {}
-    totals = {"budgeted": 0.0, "actual": 0.0, "remaining": 0.0, "at_completion": 0.0,
-              "labor": 0.0, "nonlabor": 0.0, "material": 0.0, "expense": 0.0}
+    totals = {
+        "budgeted": 0.0,
+        "actual": 0.0,
+        "remaining": 0.0,
+        "at_completion": 0.0,
+        "labor": 0.0,
+        "nonlabor": 0.0,
+        "material": 0.0,
+        "expense": 0.0,
+    }
     for a in sch.activities_of(projects):
         costs = activity_costs(sch, a)
         for k in totals:
             totals[k] += costs.get(k, 0.0)
         for key in _group_keys(sch, a, group_by, code_type):
             g = groups.setdefault(
-                key, {"budgeted": 0.0, "actual": 0.0, "remaining": 0.0,
-                      "at_completion": 0.0, "activity_count": 0.0}
+                key,
+                {
+                    "budgeted": 0.0,
+                    "actual": 0.0,
+                    "remaining": 0.0,
+                    "at_completion": 0.0,
+                    "activity_count": 0.0,
+                },
             )
             for k in ("budgeted", "actual", "remaining", "at_completion"):
                 g[k] += costs[k]
@@ -130,8 +143,7 @@ def cost_summary(
         "group_by": group_by,
         "totals": {k: round(v, 2) for k, v in totals.items()},
         "groups": [
-            {"key": k, **{m: round(v, 2) for m, v in g.items()}}
-            for k, g in sorted(groups.items())
+            {"key": k, **{m: round(v, 2) for m, v in g.items()}} for k, g in sorted(groups.items())
         ],
     }
 
@@ -145,7 +157,9 @@ def cash_flow(
     """Time-phased planned/actual/remaining cost with cumulative columns."""
     dd = sch.data_date(projects[0] if projects else None)
     series: dict[str, dict[str, float]] = {
-        "planned_cost": {}, "actual_cost": {}, "remaining_cost": {}
+        "planned_cost": {},
+        "actual_cost": {},
+        "remaining_cost": {},
     }
     proj_ids = {p.proj_id for p in projects}
     for x in sch.assignments:
@@ -158,18 +172,19 @@ def cash_flow(
         if cal is None:
             continue
         if x.planned_start and x.planned_finish:
-            merge_series(series["planned_cost"],
-                         spread(cal, x.planned_start, x.planned_finish,
-                                x.budgeted_cost, period))
+            merge_series(
+                series["planned_cost"],
+                spread(cal, x.planned_start, x.planned_finish, x.budgeted_cost, period),
+            )
         a_start, a_end = x.f("act_start_date"), x.f("act_end_date") or dd
         if a_start and a_end and x.actual_cost:
-            merge_series(series["actual_cost"],
-                         spread(cal, a_start, a_end, x.actual_cost, period))
+            merge_series(series["actual_cost"], spread(cal, a_start, a_end, x.actual_cost, period))
         r_start = x.f("restart_date") or (dd if a_start else x.planned_start)
         r_finish = x.f("reend_date") or x.finish
         if r_start and r_finish and x.remaining_cost:
-            merge_series(series["remaining_cost"],
-                         spread(cal, r_start, r_finish, x.remaining_cost, period))
+            merge_series(
+                series["remaining_cost"], spread(cal, r_start, r_finish, x.remaining_cost, period)
+            )
     if include_expenses:
         for a in sch.activities_of(projects):
             cal = sch.calendar_for(a)
@@ -179,15 +194,24 @@ def cash_flow(
                 ps = e.get("target_start_date") or a.planned_start or a.start
                 pf = e.get("target_end_date") or a.planned_finish or a.finish
                 if ps and pf:
-                    merge_series(series["planned_cost"],
-                                 spread(cal, ps, pf, float(e.get("target_cost") or 0), period))
-                    merge_series(series["remaining_cost"],
-                                 spread(cal, ps, pf, float(e.get("remain_cost") or 0), period))
+                    merge_series(
+                        series["planned_cost"],
+                        spread(cal, ps, pf, float(e.get("target_cost") or 0), period),
+                    )
+                    merge_series(
+                        series["remaining_cost"],
+                        spread(cal, ps, pf, float(e.get("remain_cost") or 0), period),
+                    )
                 if a.act_start and float(e.get("act_cost") or 0):
                     merge_series(
                         series["actual_cost"],
-                        spread(cal, a.act_start, a.act_finish or dd or a.act_start,
-                               float(e.get("act_cost") or 0), period),
+                        spread(
+                            cal,
+                            a.act_start,
+                            a.act_finish or dd or a.act_start,
+                            float(e.get("act_cost") or 0),
+                            period,
+                        ),
                     )
     rows = series_to_rows(series, cumulative_keys=tuple(series))
     return {

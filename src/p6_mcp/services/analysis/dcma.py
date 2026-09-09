@@ -115,20 +115,22 @@ def run_dcma_assessment(
     pct1 = len(offenders1) / len(incomplete) * 100 if incomplete else 0.0
     checks.append(
         _check(
-            1, "Logic", "Incomplete tasks missing a predecessor or successor "
+            1,
+            "Logic",
+            "Incomplete tasks missing a predecessor or successor "
             "(one start and one finish open end allowed)",
-            passed=pct1 <= th.missing_logic_pct_max, metric=pct1,
+            passed=pct1 <= th.missing_logic_pct_max,
+            metric=pct1,
             threshold_desc=f"<= {th.missing_logic_pct_max}%",
-            count=len(offenders1), eligible=len(incomplete), offenders=offenders1,
+            count=len(offenders1),
+            eligible=len(incomplete),
+            offenders=offenders1,
         )
     )
 
     # Relationship pool: both ends inside the assessed projects, incomplete.
     inc_ids = {a.task_id for a in incomplete}
-    rels = [
-        r for r in sch.relationships
-        if r.task_id in inc_ids or r.pred_task_id in inc_ids
-    ]
+    rels = [r for r in sch.relationships if r.task_id in inc_ids or r.pred_task_id in inc_ids]
 
     # 2. Leads ---------------------------------------------------------------
     leads = [r for r in rels if r.lag_hours < 0]
@@ -139,11 +141,15 @@ def run_dcma_assessment(
     ]
     checks.append(
         _check(
-            2, "Leads", "Relationships with negative lag",
+            2,
+            "Leads",
+            "Relationships with negative lag",
             passed=len(leads) <= th.leads_max,
             metric=len(leads) / len(rels) * 100 if rels else 0.0,
             threshold_desc=f"count <= {th.leads_max}",
-            count=len(leads), eligible=len(rels), offenders=lead_codes,
+            count=len(leads),
+            eligible=len(rels),
+            offenders=lead_codes,
         )
     )
 
@@ -157,10 +163,15 @@ def run_dcma_assessment(
     ]
     checks.append(
         _check(
-            3, "Lags", "Relationships with positive lag",
-            passed=pct3 <= th.lags_pct_max, metric=pct3,
+            3,
+            "Lags",
+            "Relationships with positive lag",
+            passed=pct3 <= th.lags_pct_max,
+            metric=pct3,
             threshold_desc=f"<= {th.lags_pct_max}%",
-            count=len(lags), eligible=len(rels), offenders=lag_codes,
+            count=len(lags),
+            eligible=len(rels),
+            offenders=lag_codes,
         )
     )
 
@@ -176,10 +187,15 @@ def run_dcma_assessment(
     ]
     checks.append(
         _check(
-            4, "Relationship Types", "Finish-to-Start share of relationships",
-            passed=pct4 >= th.fs_pct_min, metric=pct4,
+            4,
+            "Relationship Types",
+            "Finish-to-Start share of relationships",
+            passed=pct4 >= th.fs_pct_min,
+            metric=pct4,
             threshold_desc=f"FS >= {th.fs_pct_min}%",
-            count=len(rels) - fs, eligible=len(rels), offenders=non_fs,
+            count=len(rels) - fs,
+            eligible=len(rels),
+            offenders=non_fs,
         )
     )
 
@@ -188,63 +204,74 @@ def run_dcma_assessment(
     pct5 = len(hard) / len(incomplete) * 100 if incomplete else 0.0
     checks.append(
         _check(
-            5, "Hard Constraints",
+            5,
+            "Hard Constraints",
             "Mandatory Start/Finish and Start On/Finish On constraints",
-            passed=pct5 <= th.hard_constraints_pct_max, metric=pct5,
+            passed=pct5 <= th.hard_constraints_pct_max,
+            metric=pct5,
             threshold_desc=f"<= {th.hard_constraints_pct_max}%",
-            count=len(hard), eligible=len(incomplete), offenders=hard,
+            count=len(hard),
+            eligible=len(incomplete),
+            offenders=hard,
         )
     )
 
     # 6. High float ----------------------------------------------------------
     high_float = [
-        a for a in incomplete
+        a
+        for a in incomplete
         if (d := days(a, a.total_float_hours)) is not None and d > th.high_float_days
     ]
     pct6 = len(high_float) / len(incomplete) * 100 if incomplete else 0.0
     checks.append(
         _check(
-            6, "High Float", f"Total float > {th.high_float_days:g} working days",
-            passed=pct6 <= th.high_float_pct_max, metric=pct6,
+            6,
+            "High Float",
+            f"Total float > {th.high_float_days:g} working days",
+            passed=pct6 <= th.high_float_pct_max,
+            metric=pct6,
             threshold_desc=f"<= {th.high_float_pct_max}%",
-            count=len(high_float), eligible=len(incomplete), offenders=high_float,
+            count=len(high_float),
+            eligible=len(incomplete),
+            offenders=high_float,
         )
     )
 
     # 7. Negative float ------------------------------------------------------
-    neg = [
-        a for a in incomplete
-        if a.total_float_hours is not None and a.total_float_hours < 0
-    ]
+    neg = [a for a in incomplete if a.total_float_hours is not None and a.total_float_hours < 0]
     checks.append(
         _check(
-            7, "Negative Float", "Tasks with total float < 0",
+            7,
+            "Negative Float",
+            "Tasks with total float < 0",
             passed=len(neg) <= th.negative_float_max,
             metric=len(neg) / len(incomplete) * 100 if incomplete else 0.0,
             threshold_desc=f"count <= {th.negative_float_max}",
-            count=len(neg), eligible=len(incomplete), offenders=neg,
+            count=len(neg),
+            eligible=len(incomplete),
+            offenders=neg,
         )
     )
 
     # 8. High duration -------------------------------------------------------
-    pool8 = (
-        non_mile_incomplete
-        if th.exempt_milestones_from_duration_checks
-        else incomplete
-    )
+    pool8 = non_mile_incomplete if th.exempt_milestones_from_duration_checks else incomplete
     high_dur = [
-        a for a in pool8
-        if (d := days(a, a.remaining_duration_hours)) is not None
-        and d > th.high_duration_days
+        a
+        for a in pool8
+        if (d := days(a, a.remaining_duration_hours)) is not None and d > th.high_duration_days
     ]
     pct8 = len(high_dur) / len(pool8) * 100 if pool8 else 0.0
     checks.append(
         _check(
-            8, "High Duration",
+            8,
+            "High Duration",
             f"Remaining duration > {th.high_duration_days:g} working days",
-            passed=pct8 <= th.high_duration_pct_max, metric=pct8,
+            passed=pct8 <= th.high_duration_pct_max,
+            metric=pct8,
             threshold_desc=f"<= {th.high_duration_pct_max}%",
-            count=len(high_dur), eligible=len(pool8), offenders=high_dur,
+            count=len(high_dur),
+            eligible=len(pool8),
+            offenders=high_dur,
         )
     )
 
@@ -262,34 +289,43 @@ def run_dcma_assessment(
                     invalid.append(f"{a.code} (forecast finish before data date)")
     checks.append(
         _check(
-            9, "Invalid Dates",
+            9,
+            "Invalid Dates",
             "Actuals after the data date or forecasts before it",
             passed=len(invalid) <= th.invalid_dates_max,
-            metric=float(len(invalid)), threshold_desc=f"count <= {th.invalid_dates_max}",
-            count=len(invalid), eligible=len(tasks), offenders=invalid,
+            metric=float(len(invalid)),
+            threshold_desc=f"count <= {th.invalid_dates_max}",
+            count=len(invalid),
+            eligible=len(tasks),
+            offenders=invalid,
             note=None if dd else "no data date found; check skipped",
         )
     )
 
     # 10. Resources ----------------------------------------------------------
     pool10 = [
-        a for a in incomplete
+        a
+        for a in incomplete
         if a.original_duration_hours > 0
         and not (th.exempt_milestones_from_resource_check and a.is_milestone)
     ]
     no_rsrc = [
-        a for a in pool10
-        if not sch.assignments_by_task.get(a.task_id)
-        and not sch.expenses_by_task.get(a.task_id)
+        a
+        for a in pool10
+        if not sch.assignments_by_task.get(a.task_id) and not sch.expenses_by_task.get(a.task_id)
     ]
     pct10 = len(no_rsrc) / len(pool10) * 100 if pool10 else 0.0
     checks.append(
         _check(
-            10, "Resources",
+            10,
+            "Resources",
             "Incomplete tasks with duration but no resource assignment or expense",
-            passed=len(no_rsrc) == 0, metric=pct10,
+            passed=len(no_rsrc) == 0,
+            metric=pct10,
             threshold_desc="all tasks resourced (0 missing)",
-            count=len(no_rsrc), eligible=len(pool10), offenders=no_rsrc,
+            count=len(no_rsrc),
+            eligible=len(pool10),
+            offenders=no_rsrc,
         )
     )
 
@@ -310,11 +346,15 @@ def run_dcma_assessment(
     pct11 = len(missed) / should_have_finished * 100 if should_have_finished else 0.0
     checks.append(
         _check(
-            11, "Missed Tasks",
+            11,
+            "Missed Tasks",
             "Tasks that missed their baseline finish (among those due by the data date)",
-            passed=pct11 <= th.missed_tasks_pct_max, metric=pct11,
+            passed=pct11 <= th.missed_tasks_pct_max,
+            metric=pct11,
             threshold_desc=f"<= {th.missed_tasks_pct_max}%",
-            count=len(missed), eligible=should_have_finished, offenders=missed,
+            count=len(missed),
+            eligible=should_have_finished,
+            offenders=missed,
             note=bl_source,
         )
     )
@@ -328,18 +368,19 @@ def run_dcma_assessment(
 
     # 14. BEI ----------------------------------------------------------------
     planned_to_finish = should_have_finished
-    bei = (
-        actually_finished_total / planned_to_finish if planned_to_finish else None
-    )
+    bei = actually_finished_total / planned_to_finish if planned_to_finish else None
     checks.append(
         _check(
-            14, "Baseline Execution Index",
+            14,
+            "Baseline Execution Index",
             "Tasks actually completed / tasks baselined to complete by the data date",
             passed=bei is None or bei >= th.bei_min,
             metric=round(bei, 3) if bei is not None else None,
             threshold_desc=f">= {th.bei_min}",
-            count=actually_finished_total, eligible=planned_to_finish,
-            offenders=[], note=bl_source,
+            count=actually_finished_total,
+            eligible=planned_to_finish,
+            offenders=[],
+            note=bl_source,
         )
     )
 
@@ -366,19 +407,34 @@ def _critical_path_test(
     base = compute_cpm(sch, projects)
     if base.project_finish is None:
         return _check(
-            12, "Critical Path Test", "Delay a critical task; project finish must move",
-            passed=False, metric=None, threshold_desc="finish moves with delay",
-            count=0, eligible=0, offenders=[], note="no incomplete network to test",
+            12,
+            "Critical Path Test",
+            "Delay a critical task; project finish must move",
+            passed=False,
+            metric=None,
+            threshold_desc="finish moves with delay",
+            count=0,
+            eligible=0,
+            offenders=[],
+            note="no incomplete network to test",
         )
     critical = [
-        tid for tid, tf in base.total_float_hours.items() if tf <= 0
-        and not sch.activities_by_id[tid].is_milestone
+        tid
+        for tid, tf in base.total_float_hours.items()
+        if tf <= 0 and not sch.activities_by_id[tid].is_milestone
     ]
     if not critical:
         return _check(
-            12, "Critical Path Test", "Delay a critical task; project finish must move",
-            passed=False, metric=None, threshold_desc="finish moves with delay",
-            count=0, eligible=0, offenders=[], note="no critical activities found",
+            12,
+            "Critical Path Test",
+            "Delay a critical task; project finish must move",
+            passed=False,
+            metric=None,
+            threshold_desc="finish moves with delay",
+            count=0,
+            eligible=0,
+            offenders=[],
+            note="no critical activities found",
         )
     victim_id = min(critical, key=lambda t: base.early_start[t])
     victim = sch.activities_by_id[victim_id]
@@ -389,25 +445,25 @@ def _critical_path_test(
         victim.set("remain_drtn_hr_cnt", victim.remaining_duration_hours + delay_hours)
         delayed = compute_cpm(sch, projects)
     finally:
-        victim.row[victim._table._field_index["remain_drtn_hr_cnt"]] = original_raw  # noqa: SLF001
-    moved = (
-        delayed.project_finish is not None
-        and delayed.project_finish > base.project_finish
-    )
+        victim.row[victim._table._field_index["remain_drtn_hr_cnt"]] = original_raw
+    moved = delayed.project_finish is not None and delayed.project_finish > base.project_finish
     slip_days = None
     if delayed.project_finish and cal:
         slip_days = round(
-            cal.work_hours_between(base.project_finish, delayed.project_finish)
-            / cal.day_hours,
+            cal.work_hours_between(base.project_finish, delayed.project_finish) / cal.day_hours,
             1,
         )
     return _check(
-        12, "Critical Path Test",
+        12,
+        "Critical Path Test",
         f"Added {th.critical_path_test_delay_days:g} days to {victim.code}; "
         "project finish must slip",
-        passed=bool(moved), metric=slip_days,
+        passed=bool(moved),
+        metric=slip_days,
         threshold_desc="project finish moves",
-        count=1 if moved else 0, eligible=1, offenders=[] if moved else [victim],
+        count=1 if moved else 0,
+        eligible=1,
+        offenders=[] if moved else [victim],
         note=f"test activity: {victim.code}; finish {base.project_finish} -> "
         f"{delayed.project_finish}",
     )
@@ -419,16 +475,21 @@ def _cpli(
     """Critical Path Length Index = (CPL + total float) / CPL, in working days."""
     proj = projects[0] if projects else None
     finishes = [
-        a.finish for a in sch.activities_of(projects)
-        if a.finish is not None and not a.is_loe
+        a.finish for a in sch.activities_of(projects) if a.finish is not None and not a.is_loe
     ]
     project_finish = max(finishes, default=None)
     must_finish = proj.scd_end if proj else None
     if dd is None or project_finish is None:
         return _check(
-            13, "CPLI", "Critical Path Length Index",
-            passed=True, metric=None, threshold_desc=f">= {th.cpli_min}",
-            count=0, eligible=0, offenders=[],
+            13,
+            "CPLI",
+            "Critical Path Length Index",
+            passed=True,
+            metric=None,
+            threshold_desc=f">= {th.cpli_min}",
+            count=0,
+            eligible=0,
+            offenders=[],
             note="cannot compute (missing data date or finish)",
         )
     cal = sch.default_calendar
@@ -436,7 +497,7 @@ def _cpli(
         cal = sch.calendars_by_id.get(proj.clndr_id, cal)
     if cal is None:
         cpl_days = max((project_finish - dd).days, 1)
-        tf_days = ((must_finish - project_finish).days if must_finish else 0)
+        tf_days = (must_finish - project_finish).days if must_finish else 0
     else:
         cpl_days = max(cal.work_hours_between(dd, project_finish) / cal.day_hours, 0.1)
         tf_days = (
@@ -445,12 +506,18 @@ def _cpli(
             else 0.0
         )
     cpli = (cpl_days + tf_days) / cpl_days
-    note = None if must_finish else (
-        "no must-finish-by date; project float taken as 0 so CPLI = 1.0"
+    note = (
+        None if must_finish else ("no must-finish-by date; project float taken as 0 so CPLI = 1.0")
     )
     return _check(
-        13, "CPLI", "Critical Path Length Index (working days)",
-        passed=cpli >= th.cpli_min, metric=round(cpli, 3),
+        13,
+        "CPLI",
+        "Critical Path Length Index (working days)",
+        passed=cpli >= th.cpli_min,
+        metric=round(cpli, 3),
         threshold_desc=f">= {th.cpli_min}",
-        count=0, eligible=0, offenders=[], note=note,
+        count=0,
+        eligible=0,
+        offenders=[],
+        note=note,
     )

@@ -12,9 +12,14 @@ from p6_mcp.domain.schedule import Schedule
 from p6_mcp.exceptions import InvalidArgumentError
 
 _STATUS_ALIASES = {
-    "not started": "TK_NotStart", "tk_notstart": "TK_NotStart",
-    "in progress": "TK_Active", "active": "TK_Active", "tk_active": "TK_Active",
-    "completed": "TK_Complete", "complete": "TK_Complete", "tk_complete": "TK_Complete",
+    "not started": "TK_NotStart",
+    "tk_notstart": "TK_NotStart",
+    "in progress": "TK_Active",
+    "active": "TK_Active",
+    "tk_active": "TK_Active",
+    "completed": "TK_Complete",
+    "complete": "TK_Complete",
+    "tk_complete": "TK_Complete",
 }
 
 
@@ -79,12 +84,8 @@ def _code_match(sch: Schedule, a: Activity, wanted: dict[str, str]) -> bool:
 
 
 def _udf_match(sch: Schedule, a: Activity, wanted: dict[str, Any]) -> bool:
-    have = {
-        str(u.get("name") or "").lower(): u.get("value")
-        for u in sch.task_udfs(a.task_id)
-    } | {
-        str(u.get("label") or "").lower(): u.get("value")
-        for u in sch.task_udfs(a.task_id)
+    have = {str(u.get("name") or "").lower(): u.get("value") for u in sch.task_udfs(a.task_id)} | {
+        str(u.get("label") or "").lower(): u.get("value") for u in sch.task_udfs(a.task_id)
     }
     for name, val in wanted.items():
         actual = have.get(name.lower())
@@ -104,7 +105,7 @@ def _udf_match(sch: Schedule, a: Activity, wanted: dict[str, Any]) -> bool:
     return True
 
 
-def filter_activities(  # noqa: C901 - a predicate table, one branch per filter
+def filter_activities(
     sch: Schedule, activities: list[Activity], flt: ActivityFilter
 ) -> list[Activity]:
     """Apply every supplied predicate; order-preserving."""
@@ -153,7 +154,8 @@ def filter_activities(  # noqa: C901 - a predicate table, one branch per filter
     if flt.start_between:
         lo, hi = flt.start_between
         out = [
-            a for a in out
+            a
+            for a in out
             if a.start is not None
             and (lo is None or a.start >= lo)
             and (hi is None or a.start <= hi)
@@ -161,12 +163,14 @@ def filter_activities(  # noqa: C901 - a predicate table, one branch per filter
     if flt.finish_between:
         lo, hi = flt.finish_between
         out = [
-            a for a in out
+            a
+            for a in out
             if a.finish is not None
             and (lo is None or a.finish >= lo)
             and (hi is None or a.finish <= hi)
         ]
     if flt.float_min_days is not None or flt.float_max_days is not None:
+
         def tf_ok(a: Activity) -> bool:
             days = sch.hours_to_days(a, a.total_float_hours)
             if days is None:
@@ -174,11 +178,10 @@ def filter_activities(  # noqa: C901 - a predicate table, one branch per filter
             if flt.float_min_days is not None and days < flt.float_min_days:
                 return False
             return not (flt.float_max_days is not None and days > flt.float_max_days)
+
         out = [a for a in out if tf_ok(a)]
-    if (
-        flt.remaining_duration_min_days is not None
-        or flt.remaining_duration_max_days is not None
-    ):
+    if flt.remaining_duration_min_days is not None or flt.remaining_duration_max_days is not None:
+
         def rd_ok(a: Activity) -> bool:
             days = sch.hours_to_days(a, a.remaining_duration_hours) or 0.0
             if (
@@ -190,43 +193,38 @@ def filter_activities(  # noqa: C901 - a predicate table, one branch per filter
                 flt.remaining_duration_max_days is not None
                 and days > flt.remaining_duration_max_days
             )
+
         out = [a for a in out if rd_ok(a)]
     if flt.has_constraint is not None:
         out = [a for a in out if a.has_constraint == flt.has_constraint]
     if flt.constraint_type:
-        out = [
-            a for a in out
-            if flt.constraint_type in (a.cstr_type, a.f("cstr_type2"))
-        ]
+        out = [a for a in out if flt.constraint_type in (a.cstr_type, a.f("cstr_type2"))]
     if flt.is_critical is not None:
+
         def crit(a: Activity) -> bool:
             return (
-                not a.is_completed
-                and a.total_float_hours is not None
-                and a.total_float_hours <= 0
+                not a.is_completed and a.total_float_hours is not None and a.total_float_hours <= 0
             )
+
         out = [a for a in out if crit(a) == flt.is_critical]
     if flt.on_longest_path is not None:
         out = [a for a in out if a.driving_path_flag == flt.on_longest_path]
     if flt.has_no_predecessors is not None:
-        out = [
-            a for a in out
-            if (a.task_id not in sch.predecessors_of) == flt.has_no_predecessors
-        ]
+        out = [a for a in out if (a.task_id not in sch.predecessors_of) == flt.has_no_predecessors]
     if flt.has_no_successors is not None:
-        out = [
-            a for a in out
-            if (a.task_id not in sch.successors_of) == flt.has_no_successors
-        ]
+        out = [a for a in out if (a.task_id not in sch.successors_of) == flt.has_no_successors]
     if flt.is_behind_schedule is not None:
+
         def behind(a: Activity) -> bool:
             if a.planned_finish is None or a.finish is None:
                 return False
             return a.finish > a.planned_finish
+
         out = [a for a in out if behind(a) == flt.is_behind_schedule]
     if flt.has_actuals is not None:
         out = [
-            a for a in out
+            a
+            for a in out
             if (a.act_start is not None or a.act_finish is not None) == flt.has_actuals
         ]
     return out

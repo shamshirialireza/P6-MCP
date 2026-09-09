@@ -59,11 +59,7 @@ class ScheduleLoader:
         stat = path.stat()
         key = str(path)
         entry = self._cache.get(key)
-        if (
-            entry is not None
-            and entry.mtime_ns == stat.st_mtime_ns
-            and entry.size == stat.st_size
-        ):
+        if entry is not None and entry.mtime_ns == stat.st_mtime_ns and entry.size == stat.st_size:
             return entry.schedule
         enc = encoding or self._settings.default_encoding
         doc = XerReader(enc).read_path(path)
@@ -71,8 +67,13 @@ class ScheduleLoader:
         schedule = Schedule(doc, schedule_id)
         self._cache.put(key, CacheEntry(schedule, path, stat.st_mtime_ns, stat.st_size))
         self._handles[schedule_id] = key
-        log.info("parsed %s (%d tables, %d warnings) as %s",
-                 path.name, len(doc.tables), len(doc.warnings), schedule_id)
+        log.info(
+            "parsed %s (%d tables, %d warnings) as %s",
+            path.name,
+            len(doc.tables),
+            len(doc.warnings),
+            schedule_id,
+        )
         return schedule
 
     def open_schedules(self) -> list[Schedule]:

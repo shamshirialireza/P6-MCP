@@ -116,15 +116,15 @@ class Assignment(Entity):
     # Dates
     @property
     def start(self) -> datetime | None:
-        return self.date("act_start_date") or self.date("restart_date") or self.date(
-            "target_start_date"
+        return (
+            self.date("act_start_date")
+            or self.date("restart_date")
+            or self.date("target_start_date")
         )
 
     @property
     def finish(self) -> datetime | None:
-        return self.date("act_end_date") or self.date("reend_date") or self.date(
-            "target_end_date"
-        )
+        return self.date("act_end_date") or self.date("reend_date") or self.date("target_end_date")
 
     @property
     def planned_start(self) -> datetime | None:

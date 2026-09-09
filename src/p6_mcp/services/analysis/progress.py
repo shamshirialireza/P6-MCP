@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 from p6_mcp.domain.activity import Activity
@@ -46,19 +45,21 @@ def progress_summary(sch: Schedule, projects: list[Project]) -> dict[str, Any]:
     return {
         "data_date": dd,
         "activity_counts": {
-            "total": n, "completed": complete, "in_progress": active,
+            "total": n,
+            "completed": complete,
+            "in_progress": active,
             "not_started": not_started,
         },
         "percent_complete": {
             "by_activity_count": round(complete / n * 100, 1) if n else 0.0,
             "by_duration": round((od - rd) / od * 100, 1) if od else 0.0,
-            "by_units": round(
-                act_units / (act_units + rem_units) * 100, 1
-            ) if act_units + rem_units else 0.0,
+            "by_units": round(act_units / (act_units + rem_units) * 100, 1)
+            if act_units + rem_units
+            else 0.0,
             "by_cost": round(act_cost / bud_cost * 100, 1) if bud_cost else 0.0,
-            "duration_weighted_activity_pct": round(
-                phys_sum / phys_weight * 100, 1
-            ) if phys_weight else 0.0,
+            "duration_weighted_activity_pct": round(phys_sum / phys_weight * 100, 1)
+            if phys_weight
+            else 0.0,
         },
         "cost": {
             "budgeted": round(bud_cost, 2),
@@ -72,7 +73,9 @@ def progress_summary(sch: Schedule, projects: list[Project]) -> dict[str, Any]:
 
 
 def behind_schedule(
-    sch: Schedule, projects: list[Project], days_late_min: float = 0.0,
+    sch: Schedule,
+    projects: list[Project],
+    days_late_min: float = 0.0,
     vs: str = "baseline",
 ) -> list[dict[str, Any]]:
     """Activities forecast/finished later than their baseline (or planned) finish."""
@@ -84,10 +87,7 @@ def behind_schedule(
         if ref is None or cur is None or cur <= ref:
             continue
         cal = sch.calendar_for(a)
-        late_days = (
-            cal.work_hours_between(ref, cur) / cal.day_hours if cal else
-            (cur - ref).days
-        )
+        late_days = cal.work_hours_between(ref, cur) / cal.day_hours if cal else (cur - ref).days
         if late_days >= days_late_min:
             out.append(
                 {
@@ -131,11 +131,7 @@ def status_update_check(sch: Schedule, projects: list[Project]) -> dict[str, Any
             remaining_anomalies.append(
                 {"task_code": a.code, "issue": "completed but remaining duration > 0"}
             )
-        if (
-            a.is_in_progress
-            and a.remaining_duration_hours == 0
-            and not a.is_milestone
-        ):
+        if a.is_in_progress and a.remaining_duration_hours == 0 and not a.is_milestone:
             remaining_anomalies.append(
                 {"task_code": a.code, "issue": "in progress with zero remaining duration"}
             )
@@ -187,13 +183,12 @@ def activity_variances(
     sch: Schedule, projects: list[Project], vs: str = "baseline"
 ) -> list[dict[str, Any]]:
     """Start/finish variance in working days vs baseline or planned dates."""
-    bl_map, source = _baseline_finish_map(sch, projects)
+    _, source = _baseline_finish_map(sch, projects)
     bl_acts: dict[str, Activity] = {}
     if vs == "baseline":
-        bl_ids = {
-            p.sum_base_proj_id for p in projects if p.sum_base_proj_id is not None
-        } | {
-            bp.proj_id for bp in sch.baseline_projects
+        bl_ids = {p.sum_base_proj_id for p in projects if p.sum_base_proj_id is not None} | {
+            bp.proj_id
+            for bp in sch.baseline_projects
             if bp.orig_proj_id in {p.proj_id for p in projects}
         }
         bl_acts = {a.code: a for a in sch.activities if a.proj_id in bl_ids}
@@ -208,8 +203,7 @@ def activity_variances(
         cal = sch.calendar_for(a)
         if cal is None:
             continue
-        row: dict[str, Any] = {"task_code": a.code, "task_name": a.name,
-                               "status": a.status_label}
+        row: dict[str, Any] = {"task_code": a.code, "task_name": a.name, "status": a.status_label}
         has_var = False
         if ref_start and a.start:
             v = cal.work_hours_between(ref_start, a.start) / cal.day_hours

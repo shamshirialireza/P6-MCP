@@ -69,9 +69,7 @@ def activity_to_dict(
                 "proj_id": a.proj_id,
                 "project": proj.short_name if proj else None,
                 "original_duration_hours": a.original_duration_hours,
-                "original_duration_days": rnd(
-                    sch.hours_to_days(a, a.original_duration_hours)
-                ),
+                "original_duration_days": rnd(sch.hours_to_days(a, a.original_duration_hours)),
                 "remaining_duration_hours": a.remaining_duration_hours,
                 "total_float_hours": a.total_float_hours,
                 "free_float_hours": a.free_float_hours,
@@ -183,9 +181,7 @@ def resource_to_dict(sch: Schedule, r: Resource, verbosity: str = "standard") ->
     return iso(d)
 
 
-def assignment_to_dict(
-    sch: Schedule, x: Assignment, verbosity: str = "standard"
-) -> dict[str, Any]:
+def assignment_to_dict(sch: Schedule, x: Assignment, verbosity: str = "standard") -> dict[str, Any]:
     act = sch.activities_by_id.get(x.task_id)
     rsrc = sch.resources_by_id.get(x.rsrc_id) if x.rsrc_id else None
     d: dict[str, Any] = {

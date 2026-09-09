@@ -17,14 +17,8 @@ def _eligible(a: Activity) -> bool:
 
 def open_ends(sch: Schedule, activities: list[Activity]) -> dict[str, list[Activity]]:
     """Activities with no predecessors / no successors (excluding LOE/WBS)."""
-    no_preds = [
-        a for a in activities
-        if _eligible(a) and a.task_id not in sch.predecessors_of
-    ]
-    no_succs = [
-        a for a in activities
-        if _eligible(a) and a.task_id not in sch.successors_of
-    ]
+    no_preds = [a for a in activities if _eligible(a) and a.task_id not in sch.predecessors_of]
+    no_succs = [a for a in activities if _eligible(a) and a.task_id not in sch.successors_of]
     return {"no_predecessors": no_preds, "no_successors": no_succs}
 
 
@@ -104,13 +98,9 @@ def circular_logic(sch: Schedule, activities: list[Activity]) -> list[list[str]]
         for nxt in graph.get(node, ()):
             if color.get(nxt, BLACK) == GRAY:
                 i = stack_path.index(nxt)
-                cycle = stack_path[i:] + [nxt]
+                cycle = [*stack_path[i:], nxt]
                 cycles.append(
-                    [
-                        sch.activities_by_id[t].code
-                        for t in cycle
-                        if t in sch.activities_by_id
-                    ]
+                    [sch.activities_by_id[t].code for t in cycle if t in sch.activities_by_id]
                 )
             elif color.get(nxt) == WHITE:
                 dfs(nxt)
@@ -186,9 +176,7 @@ def relationship_mix(sch: Schedule, activities: list[Activity]) -> dict[str, Any
     return {
         "total_relationships": total,
         "counts": counts,
-        "percentages": {
-            k: round(v / total * 100, 1) if total else 0.0 for k, v in counts.items()
-        },
+        "percentages": {k: round(v / total * 100, 1) if total else 0.0 for k, v in counts.items()},
         "leads": leads,
         "lags": lags,
         "lag_hours_distribution": sorted(lag_values),

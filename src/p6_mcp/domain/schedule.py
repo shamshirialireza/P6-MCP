@@ -70,8 +70,7 @@ class Schedule:
             return [p]
         if project_short_name:
             matches = [
-                p for p in self.projects
-                if p.short_name.lower() == project_short_name.lower()
+                p for p in self.projects if p.short_name.lower() == project_short_name.lower()
             ]
             if not matches:
                 raise NotFoundError(
@@ -110,9 +109,7 @@ class Schedule:
         ids = {p.proj_id for p in projects}
         return [a for a in self.activities if a.proj_id in ids]
 
-    def resolve_activity(
-        self, ref: str | int, project_ids: set[int] | None = None
-    ) -> Activity:
+    def resolve_activity(self, ref: str | int, project_ids: set[int] | None = None) -> Activity:
         """Find one activity by task_code or numeric task_id."""
         if isinstance(ref, int) or (isinstance(ref, str) and ref.isdigit()):
             a = self.activities_by_id.get(int(ref))
@@ -127,10 +124,7 @@ class Schedule:
                 f"No activity with code or id {ref!r}",
                 hint="Use get_activities/search_activities to list valid codes.",
             )
-        non_bl = [
-            a for a in matches
-            if a.proj_id in {p.proj_id for p in self.active_projects}
-        ]
+        non_bl = [a for a in matches if a.proj_id in {p.proj_id for p in self.active_projects}]
         matches = non_bl or matches
         if len(matches) > 1:
             raise AmbiguousMatchError(
@@ -269,8 +263,7 @@ class Schedule:
                 return r
         needle = str(ref).lower()
         matches = [
-            r for r in self.resources
-            if r.short_name.lower() == needle or r.name.lower() == needle
+            r for r in self.resources if r.short_name.lower() == needle or r.name.lower() == needle
         ]
         if not matches:
             raise NotFoundError(
@@ -314,7 +307,7 @@ class Schedule:
             if rid is not None:
                 out.setdefault(int(rid), []).append(d)
         for rows in out.values():
-            rows.sort(key=lambda r: (r.get("start_date") or datetime.min))
+            rows.sort(key=lambda r: r.get("start_date") or datetime.min)
         return out
 
     # -- activity codes ------------------------------------------------------
@@ -336,9 +329,7 @@ class Schedule:
         if t is None:
             return {}
         return {
-            int(d["actv_code_id"]): d
-            for d in t.iter_dicts()
-            if d.get("actv_code_id") is not None
+            int(d["actv_code_id"]): d for d in t.iter_dicts() if d.get("actv_code_id") is not None
         }
 
     @cached_property
@@ -383,9 +374,7 @@ class Schedule:
         if t is None:
             return {}
         return {
-            int(d["udf_type_id"]): d
-            for d in t.iter_dicts()
-            if d.get("udf_type_id") is not None
+            int(d["udf_type_id"]): d for d in t.iter_dicts() if d.get("udf_type_id") is not None
         }
 
     @cached_property
@@ -478,6 +467,4 @@ class Schedule:
         t = self.doc.table("SCHEDOPTIONS")
         if t is None:
             return {}
-        return {
-            int(d["proj_id"]): d for d in t.iter_dicts() if d.get("proj_id") is not None
-        }
+        return {int(d["proj_id"]): d for d in t.iter_dicts() if d.get("proj_id") is not None}

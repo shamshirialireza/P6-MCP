@@ -27,9 +27,7 @@ def constraints(
             if constraint_type and ctype != constraint_type:
                 continue
             is_hard = ctype in HARD_CONSTRAINTS
-            is_stale = bool(
-                dd and cdate and cdate < dd and not a.is_completed
-            )
+            is_stale = bool(dd and cdate and cdate < dd and not a.is_completed)
             hard += is_hard
             soft += not is_hard
             stale += is_stale
