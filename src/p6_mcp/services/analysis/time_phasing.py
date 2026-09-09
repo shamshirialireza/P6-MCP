@@ -7,8 +7,9 @@ cumulative profile). Buckets are week / month / quarter boundaries.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from datetime import date, datetime, timedelta
-from typing import Any, Iterator
+from typing import Any
 
 from p6_mcp.domain.calendar import Calendar
 from p6_mcp.exceptions import InvalidArgumentError
@@ -118,8 +119,9 @@ def spread(
         if h <= 0:
             continue
         if curve:
-            frac = _curve_fraction(curve, consumed_hours / total_hours,
-                                   (consumed_hours + h) / total_hours)
+            frac = _curve_fraction(
+                curve, consumed_hours / total_hours, (consumed_hours + h) / total_hours
+            )
             amount = total * frac
         else:
             amount = total * h / total_hours

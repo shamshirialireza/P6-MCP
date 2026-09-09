@@ -25,9 +25,11 @@ def milestones(
         variance_days = None
         if bl is not None and date is not None:
             cal = sch.calendar_for(a)
-            variance_days = round(
-                cal.work_hours_between(bl, date) / cal.day_hours, 1
-            ) if cal else (date - bl).days
+            variance_days = (
+                round(cal.work_hours_between(bl, date) / cal.day_hours, 1)
+                if cal
+                else (date - bl).days
+            )
         out.append(
             {
                 "task_code": a.code,

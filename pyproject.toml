@@ -68,7 +68,8 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM", "C4", "RUF"]
-ignore = ["E501", "SIM108", "B905"]
+# RUF002: we intentionally use × and — in prose docstrings.
+ignore = ["E501", "SIM108", "B905", "RUF002"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["B011"]

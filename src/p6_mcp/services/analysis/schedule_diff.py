@@ -24,8 +24,14 @@ _TRACKED_FIELDS = (
     ("wbs_id", "wbs_moved"),
 )
 _DATE_FIELDS = (
-    "act_start_date", "act_end_date", "early_start_date", "early_end_date",
-    "late_start_date", "late_end_date", "target_start_date", "target_end_date",
+    "act_start_date",
+    "act_end_date",
+    "early_start_date",
+    "early_end_date",
+    "late_start_date",
+    "late_end_date",
+    "target_start_date",
+    "target_end_date",
 )
 
 
@@ -59,12 +65,8 @@ def diff_schedules(
 ) -> dict[str, Any]:
     """Full update-to-update diff, grouped summary + per-activity detail."""
     pairs = _match_projects(cur, prev, project_match)
-    cur_acts = {
-        a.code: a for p, _ in pairs for a in cur.activities if a.proj_id == p.proj_id
-    }
-    prev_acts = {
-        a.code: a for _, q in pairs for a in prev.activities if a.proj_id == q.proj_id
-    }
+    cur_acts = {a.code: a for p, _ in pairs for a in cur.activities if a.proj_id == p.proj_id}
+    prev_acts = {a.code: a for _, q in pairs for a in prev.activities if a.proj_id == q.proj_id}
     added = sorted(set(cur_acts) - set(prev_acts))
     deleted = sorted(set(prev_acts) - set(cur_acts))
     changes: list[dict[str, Any]] = []
@@ -76,19 +78,22 @@ def diff_schedules(
             va, vb = a.f(field_name), b.f(field_name)
             if va != vb:
                 entry["changes"].setdefault(label, {})[field_name] = {
-                    "from": vb, "to": va,
+                    "from": vb,
+                    "to": va,
                 }
         for field_name in _DATE_FIELDS:
             va, vb = a.date(field_name), b.date(field_name)
             if va != vb:
                 entry["changes"].setdefault("dates", {})[field_name] = {
-                    "from": vb, "to": va,
+                    "from": vb,
+                    "to": va,
                 }
         ca, cb = activity_costs(cur, a), activity_costs(prev, b)
         for k in ("budgeted", "actual", "remaining"):
             if abs(ca[k] - cb[k]) > 0.01:
                 entry["changes"].setdefault("cost", {})[k] = {
-                    "from": round(cb[k], 2), "to": round(ca[k], 2),
+                    "from": round(cb[k], 2),
+                    "to": round(ca[k], 2),
                 }
         if a.percent_complete() > b.percent_complete() + 0.01:
             progressed.append(code)
@@ -116,8 +121,7 @@ def diff_schedules(
 
     cal_cur, cal_prev = cal_fingerprint(cur), cal_fingerprint(prev)
     cal_changes = sorted(
-        name for name in set(cal_cur) | set(cal_prev)
-        if cal_cur.get(name) != cal_prev.get(name)
+        name for name in set(cal_cur) | set(cal_prev) if cal_cur.get(name) != cal_prev.get(name)
     )
     cur_finish = max(
         (a.finish for a in cur_acts.values() if a.finish and not a.is_loe),
@@ -129,9 +133,7 @@ def diff_schedules(
     )
     return {
         "project_match": project_match,
-        "matched_projects": [
-            {"current": p.short_name, "previous": q.short_name} for p, q in pairs
-        ],
+        "matched_projects": [{"current": p.short_name, "previous": q.short_name} for p, q in pairs],
         "summary": {
             "activities_added": len(added),
             "activities_deleted": len(deleted),
@@ -168,9 +170,9 @@ def schedule_trend(schedules: list[tuple[str, Schedule]]) -> dict[str, Any]:
         prog = progress_summary(s, projects)
         ev = earned_value(s, projects, time_phased=False)
         crit = sum(
-            1 for a in s.activities_of(projects)
-            if not a.is_completed and a.total_float_hours is not None
-            and a.total_float_hours <= 0
+            1
+            for a in s.activities_of(projects)
+            if not a.is_completed and a.total_float_hours is not None and a.total_float_hours <= 0
         )
         rows.append(
             {

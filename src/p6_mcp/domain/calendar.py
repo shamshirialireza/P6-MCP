@@ -24,7 +24,7 @@ def _p6_weekday(d: date) -> int:
 class Calendar(Entity):
     """One CALENDAR row plus parsed workweek/exception data and math helpers."""
 
-    __slots__ = ("_parsed", "_empty_workweek")
+    __slots__ = ("_empty_workweek", "_parsed")
 
     def __init__(self, table: object, row: list[str]) -> None:  # type: ignore[override]
         super().__init__(table, row)  # type: ignore[arg-type]

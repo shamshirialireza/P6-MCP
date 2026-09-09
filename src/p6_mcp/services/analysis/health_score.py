@@ -32,39 +32,40 @@ def check_schedule_quality(
         return sorted(a.code for a in xs)
 
     long_dur = [
-        a for a in incomplete
-        if not a.is_milestone and not a.is_loe
+        a
+        for a in incomplete
+        if not a.is_milestone
+        and not a.is_loe
         and (d := sch.hours_to_days(a, a.remaining_duration_hours)) is not None
         and d > long_duration_days
     ]
     high_float = [
-        a for a in incomplete
-        if (d := sch.hours_to_days(a, a.total_float_hours)) is not None
-        and d > high_float_days
+        a
+        for a in incomplete
+        if (d := sch.hours_to_days(a, a.total_float_hours)) is not None and d > high_float_days
     ]
     neg_float = [
-        a for a in incomplete
-        if a.total_float_hours is not None and a.total_float_hours < 0
+        a for a in incomplete if a.total_float_hours is not None and a.total_float_hours < 0
     ]
     no_rsrc = [
-        a for a in incomplete
-        if not a.is_milestone and not a.is_loe and a.original_duration_hours > 0
+        a
+        for a in incomplete
+        if not a.is_milestone
+        and not a.is_loe
+        and a.original_duration_hours > 0
         and not sch.assignments_by_task.get(a.task_id)
         and not sch.expenses_by_task.get(a.task_id)
     ]
-    missing_dates = [
-        a for a in acts if a.start is None or a.finish is None
-    ]
+    missing_dates = [a for a in acts if a.start is None or a.finish is None]
     loe_unlinked = [
-        a for a in acts
-        if a.is_loe
-        and (a.task_id not in sch.predecessors_of or a.task_id not in sch.successors_of)
+        a
+        for a in acts
+        if a.is_loe and (a.task_id not in sch.predecessors_of or a.task_id not in sch.successors_of)
     ]
-    mile_with_dur = [
-        a for a in acts if a.is_milestone and a.original_duration_hours > 0
-    ]
+    mile_with_dur = [a for a in acts if a.is_milestone and a.original_duration_hours > 0]
     zero_remaining_active = [
-        a for a in incomplete
+        a
+        for a in incomplete
         if a.is_in_progress and not a.is_milestone and a.remaining_duration_hours == 0
     ]
     hard_constrained = [a for a in incomplete if a.has_hard_constraint]
@@ -125,9 +126,7 @@ def health_score(
 
     components: dict[str, dict[str, Any]] = {}
     components["logic"] = {
-        "score": ratio_score(
-            len(checks["no_predecessors"]) + len(checks["no_successors"]), n * 2
-        ),
+        "score": ratio_score(len(checks["no_predecessors"]) + len(checks["no_successors"]), n * 2),
         "detail": f"{len(checks['no_predecessors'])} missing preds, "
         f"{len(checks['no_successors'])} missing succs",
     }
@@ -149,9 +148,9 @@ def health_score(
         "detail": f"{len(checks['long_duration'])} long-duration activities",
     }
     components["invalid_dates"] = {
-        "score": 100.0 if not checks["invalid_dates"] else max(
-            0.0, 100 - 20 * len(checks["invalid_dates"])
-        ),
+        "score": 100.0
+        if not checks["invalid_dates"]
+        else max(0.0, 100 - 20 * len(checks["invalid_dates"])),
         "detail": f"{len(checks['invalid_dates'])} activities with invalid dates",
     }
     components["resources"] = {
@@ -160,9 +159,10 @@ def health_score(
     }
     oos = len(checks["out_of_sequence"])
     components["progress"] = {
-        "score": max(0.0, 100.0 - 15 * oos - 10 * len(
-            checks["status_update"]["remaining_duration_anomalies"]
-        )),
+        "score": max(
+            0.0,
+            100.0 - 15 * oos - 10 * len(checks["status_update"]["remaining_duration_anomalies"]),
+        ),
         "detail": f"{oos} out-of-sequence, "
         f"{len(checks['status_update']['remaining_duration_anomalies'])} status anomalies",
     }
@@ -174,7 +174,8 @@ def health_score(
 
     score = sum(components[k]["score"] * w.get(k, 0.0) for k in components) / total_w
     recommendations = [
-        rec for key, rec in [
+        rec
+        for key, rec in [
             ("logic", "Add missing predecessors/successors to close open ends."),
             ("leads_lags", "Replace leads with activity splits; justify or remove lags."),
             ("constraints", "Replace hard constraints with logic where possible."),
@@ -190,12 +191,18 @@ def health_score(
     return {
         "score": round(score, 1),
         "grade": (
-            "A" if score >= 90 else "B" if score >= 80 else "C" if score >= 65
-            else "D" if score >= 50 else "F"
+            "A"
+            if score >= 90
+            else "B"
+            if score >= 80
+            else "C"
+            if score >= 65
+            else "D"
+            if score >= 50
+            else "F"
         ),
         "components": {
-            k: {"score": round(v["score"], 1), "weight": w.get(k, 0.0),
-                "detail": v["detail"]}
+            k: {"score": round(v["score"], 1), "weight": w.get(k, 0.0), "detail": v["detail"]}
             for k, v in components.items()
         },
         "recommendations": recommendations,

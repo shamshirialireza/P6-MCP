@@ -8,10 +8,10 @@ always kept).
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 
-class FieldType(str, Enum):
+class FieldType(StrEnum):
     """Coercion category for an XER column."""
 
     STR = "str"
@@ -25,16 +25,68 @@ class FieldType(str, Enum):
 #: generically; this set drives the domain binding and documentation.
 KNOWN_TABLES: frozenset[str] = frozenset(
     {
-        "ACCOUNT", "ACTVCODE", "ACTVTYPE", "APPLYACTOPTIONS", "CALENDAR", "CURRTYPE",
-        "DOCUMENT", "FINDATES", "FINTMPL", "FUNDSRC", "MEMOTYPE", "NONWORK", "OBS",
-        "PCATTYPE", "PCATVAL", "PHASE", "POBS", "PROJCOST", "PROJECT", "PROJEST",
-        "PROJFUND", "PROJISSU", "PROJPCAT", "PROJTHRS", "PROJWBS", "RCATTYPE",
-        "RCATVAL", "RISKTYPE", "ROLECATTYPE", "ROLECATVAL", "ROLELIMIT", "ROLERATE",
-        "ROLERCAT", "ROLES", "RSRC", "RSRCCURVDATA", "RSRCLEVELLIST", "RSRCRATE",
-        "RSRCRCAT", "RSRCROLE", "SCHEDOPTIONS", "SHIFT", "SHIFTPER", "TASK",
-        "TASKACTV", "TASKDOC", "TASKFDBK", "TASKFIN", "TASKMEMO", "TASKNOTE",
-        "TASKPRED", "TASKPROC", "TASKRSRC", "TASKUSER", "THRSPARM", "TRSRCFIN",
-        "UDFTYPE", "UDFVALUE", "UMEASURE", "WBSBUDG", "WBSMEMO", "WBSRSRC_QTY",
+        "ACCOUNT",
+        "ACTVCODE",
+        "ACTVTYPE",
+        "APPLYACTOPTIONS",
+        "CALENDAR",
+        "CURRTYPE",
+        "DOCUMENT",
+        "FINDATES",
+        "FINTMPL",
+        "FUNDSRC",
+        "MEMOTYPE",
+        "NONWORK",
+        "OBS",
+        "PCATTYPE",
+        "PCATVAL",
+        "PHASE",
+        "POBS",
+        "PROJCOST",
+        "PROJECT",
+        "PROJEST",
+        "PROJFUND",
+        "PROJISSU",
+        "PROJPCAT",
+        "PROJTHRS",
+        "PROJWBS",
+        "RCATTYPE",
+        "RCATVAL",
+        "RISKTYPE",
+        "ROLECATTYPE",
+        "ROLECATVAL",
+        "ROLELIMIT",
+        "ROLERATE",
+        "ROLERCAT",
+        "ROLES",
+        "RSRC",
+        "RSRCCURVDATA",
+        "RSRCLEVELLIST",
+        "RSRCRATE",
+        "RSRCRCAT",
+        "RSRCROLE",
+        "SCHEDOPTIONS",
+        "SHIFT",
+        "SHIFTPER",
+        "TASK",
+        "TASKACTV",
+        "TASKDOC",
+        "TASKFDBK",
+        "TASKFIN",
+        "TASKMEMO",
+        "TASKNOTE",
+        "TASKPRED",
+        "TASKPROC",
+        "TASKRSRC",
+        "TASKUSER",
+        "THRSPARM",
+        "TRSRCFIN",
+        "UDFTYPE",
+        "UDFVALUE",
+        "UMEASURE",
+        "WBSBUDG",
+        "WBSMEMO",
+        "WBSRSRC_QTY",
         "WBSSTEP",
     }
 )
@@ -84,8 +136,17 @@ _DATE_SUFFIXES = ("_date",)
 _BOOL_SUFFIXES = ("_flag",)
 _INT_SUFFIXES = ("_id", "_num", "_level", "_type_id")
 _FLOAT_SUFFIXES = (
-    "_cnt", "_qty", "_cost", "_pct", "_factor", "_rate", "_wt", "_value",
-    "_qty_per_hr", "_per_qty", "_amount",
+    "_cnt",
+    "_qty",
+    "_cost",
+    "_pct",
+    "_factor",
+    "_rate",
+    "_wt",
+    "_value",
+    "_qty_per_hr",
+    "_per_qty",
+    "_amount",
 )
 
 

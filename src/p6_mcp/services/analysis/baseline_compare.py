@@ -28,10 +28,9 @@ def _baseline_pool(
                 hint="Call get_baselines to list baseline projects in this file.",
             )
         return sch, acts, f"baseline project {baseline_project_id} in file"
-    bl_ids = {
-        p.sum_base_proj_id for p in projects if p.sum_base_proj_id is not None
-    } | {
-        bp.proj_id for bp in sch.baseline_projects
+    bl_ids = {p.sum_base_proj_id for p in projects if p.sum_base_proj_id is not None} | {
+        bp.proj_id
+        for bp in sch.baseline_projects
         if bp.orig_proj_id in {p.proj_id for p in projects}
     }
     acts = [a for a in sch.activities if a.proj_id in bl_ids]
@@ -52,9 +51,7 @@ def compare_to_baseline(
     tolerance_days: float = 0.0,
 ) -> dict[str, Any]:
     """Per-activity variance, added/deleted, logic & assignment changes, summary."""
-    bl_sch, bl_acts, source = _baseline_pool(
-        sch, projects, baseline_project_id, baseline_schedule
-    )
+    bl_sch, bl_acts, source = _baseline_pool(sch, projects, baseline_project_id, baseline_schedule)
     cur = {a.code: a for a in sch.activities_of(projects)}
     bl = {a.code: a for a in bl_acts}
     added = sorted(set(cur) - set(bl))
@@ -90,9 +87,7 @@ def compare_to_baseline(
             elif isinstance(fv, (int, float)) and fv < 0:
                 gained += 1
             variances.append(row)
-    variances.sort(
-        key=lambda d: -abs(float(d.get("finish_variance_days") or 0))
-    )
+    variances.sort(key=lambda d: -abs(float(d.get("finish_variance_days") or 0)))
 
     # Logic changes on common activities
     def rel_set(s: Schedule, pool: dict[str, Activity]) -> set[tuple[str, str, str, float]]:
@@ -120,7 +115,8 @@ def compare_to_baseline(
                 )
                 key = f"{code}|{rname}"
                 out[key] = {
-                    "qty": x.budgeted_qty, "cost": x.budgeted_cost,
+                    "qty": x.budgeted_qty,
+                    "cost": x.budgeted_cost,
                 }
         return out
 
@@ -136,20 +132,17 @@ def compare_to_baseline(
         elif abs(c["cost"] - b2["cost"]) > 0.01 or abs(c["qty"] - b2["qty"]) > 0.01:
             asg_changes.append(
                 {
-                    "task_code": code, "resource": rname, "change": "modified",
+                    "task_code": code,
+                    "resource": rname,
+                    "change": "modified",
                     "qty_delta": round(c["qty"] - b2["qty"], 2),
                     "cost_delta": round(c["cost"] - b2["cost"], 2),
                 }
             )
 
-    ms_var = [
-        v for v in variances
-        if cur[str(v["task_code"])].is_milestone
-    ]
-    crit_cur = {c for c, a in cur.items()
-                if not a.is_completed and (a.total_float_hours or 1) <= 0}
-    crit_bl = {c for c, a in bl.items()
-               if not a.is_completed and (a.total_float_hours or 1) <= 0}
+    ms_var = [v for v in variances if cur[str(v["task_code"])].is_milestone]
+    crit_cur = {c for c, a in cur.items() if not a.is_completed and (a.total_float_hours or 1) <= 0}
+    crit_bl = {c for c, a in bl.items() if not a.is_completed and (a.total_float_hours or 1) <= 0}
     return {
         "baseline_source": source,
         "tolerance_days": tolerance_days,

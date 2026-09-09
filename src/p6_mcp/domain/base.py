@@ -131,7 +131,7 @@ class Entity:
 
     __slots__ = ("_table", "row")
 
-    def __init__(self, table: "Table", row: list[str]) -> None:
+    def __init__(self, table: Table, row: list[str]) -> None:
         self._table = table
         self.row = row
 

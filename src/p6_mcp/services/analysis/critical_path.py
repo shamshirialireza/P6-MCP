@@ -143,9 +143,7 @@ def get_critical_path(
     result: dict[str, Any] = {
         "method": method,
         "float_threshold_hours": threshold,
-        "project_critical_path_setting": projects[0].critical_path_type_label
-        if projects
-        else None,
+        "project_critical_path_setting": projects[0].critical_path_type_label if projects else None,
     }
     if method in ("total_float", "both"):
         result["total_float_critical"] = critical_by_total_float(
@@ -173,9 +171,7 @@ def get_near_critical(
     return out
 
 
-def get_negative_float(
-    sch: Schedule, projects: list[Project]
-) -> list[tuple[Activity, float]]:
+def get_negative_float(sch: Schedule, projects: list[Project]) -> list[tuple[Activity, float]]:
     out: list[tuple[Activity, float]] = []
     for a in sch.activities_of(projects):
         if a.is_completed or a.total_float_hours is None:
@@ -186,9 +182,7 @@ def get_negative_float(
     return out
 
 
-def get_float_paths(
-    sch: Schedule, projects: list[Project], max_paths: int = 5
-) -> dict[str, Any]:
+def get_float_paths(sch: Schedule, projects: list[Project], max_paths: int = 5) -> dict[str, Any]:
     """Group by P6 multiple-float-path fields, else bucket by float value."""
     activities = [a for a in sch.activities_of(projects) if not a.is_completed]
     with_fp = [a for a in activities if a.f("float_path") is not None]
@@ -250,5 +244,4 @@ def get_float_distribution(
             median=round(values[len(values) // 2], 2),
             mean=round(sum(values) / len(values), 2),
         )
-    return {"bins": [{"range": lab, "count": c} for lab, c in zip(labels, counts)],
-            "stats": stats}
+    return {"bins": [{"range": lab, "count": c} for lab, c in zip(labels, counts)], "stats": stats}

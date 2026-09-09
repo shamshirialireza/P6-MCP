@@ -30,7 +30,9 @@ class Settings(BaseSettings):
     )
     cache_size: int = Field(default=8, ge=1, description="Max parsed schedules kept in LRU cache.")
     max_output_bytes: int = Field(
-        default=200_000, ge=1_000, description="Serialized tool-output byte budget before truncation."
+        default=200_000,
+        ge=1_000,
+        description="Serialized tool-output byte budget before truncation.",
     )
     default_encoding: str | None = Field(
         default=None, description="Force an encoding (cp1252/utf-8/...) instead of auto-detection."

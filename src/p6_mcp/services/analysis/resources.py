@@ -55,24 +55,31 @@ def utilization(
             continue
         rsrc = sch.resources_by_id.get(x.rsrc_id)
         cal = (
-            sch.calendars_by_id.get(rsrc.clndr_id)
-            if rsrc and rsrc.clndr_id
-            else None
+            sch.calendars_by_id.get(rsrc.clndr_id) if rsrc and rsrc.clndr_id else None
         ) or sch.calendar_for(act)
         if cal is None:
             continue
         curve = _assignment_curve(sch, x) if use_curves else None
         bucket = per_resource.setdefault(
             x.rsrc_id,
-            {k: {} for k in (
-                "planned_qty", "actual_qty", "remaining_qty",
-                "planned_cost", "actual_cost", "remaining_cost",
-            )},
+            {
+                k: {}
+                for k in (
+                    "planned_qty",
+                    "actual_qty",
+                    "remaining_qty",
+                    "planned_cost",
+                    "actual_cost",
+                    "remaining_cost",
+                )
+            },
         )
         ps, pf = x.planned_start, x.planned_finish
         if ps and pf:
             merge_series(bucket["planned_qty"], spread(cal, ps, pf, x.budgeted_qty, period, curve))
-            merge_series(bucket["planned_cost"], spread(cal, ps, pf, x.budgeted_cost, period, curve))
+            merge_series(
+                bucket["planned_cost"], spread(cal, ps, pf, x.budgeted_cost, period, curve)
+            )
         a_start = x.f("act_start_date")
         a_end = x.f("act_end_date") or dd
         if a_start and a_end and x.actual_qty:
@@ -82,10 +89,12 @@ def utilization(
         r_finish = x.f("reend_date") or x.finish
         if r_start and r_finish and x.remaining_qty:
             merge_series(
-                bucket["remaining_qty"], spread(cal, r_start, r_finish, x.remaining_qty, period, curve)
+                bucket["remaining_qty"],
+                spread(cal, r_start, r_finish, x.remaining_qty, period, curve),
             )
             merge_series(
-                bucket["remaining_cost"], spread(cal, r_start, r_finish, x.remaining_cost, period, curve)
+                bucket["remaining_cost"],
+                spread(cal, r_start, r_finish, x.remaining_cost, period, curve),
             )
 
     resources_out: list[dict[str, Any]] = []
@@ -94,10 +103,7 @@ def utilization(
         series = per_resource[rid]
         labels = sorted({lab for m in series.values() for lab in m})
         if start:
-            labels = [
-                lab for lab in labels
-                if lab >= period_label(start.date(), period)
-            ]
+            labels = [lab for lab in labels if lab >= period_label(start.date(), period)]
         if end:
             labels = [lab for lab in labels if lab <= period_label(end.date(), period)]
         limit_series = _limits(sch, rsrc, labels, period, compare_to)
@@ -152,9 +158,7 @@ def _limits(
     if max_per_hr is None:
         return {}
     cal = (
-        sch.calendars_by_id.get(rsrc.clndr_id)
-        if rsrc.clndr_id
-        else None
+        sch.calendars_by_id.get(rsrc.clndr_id) if rsrc.clndr_id else None
     ) or sch.default_calendar
     if cal is None:
         return {}
@@ -181,8 +185,7 @@ def _limits(
     return out
 
 
-def leveling_report(sch: Schedule, projects: list[Project], period: str = "week"
-                    ) -> dict[str, Any]:
+def leveling_report(sch: Schedule, projects: list[Project], period: str = "week") -> dict[str, Any]:
     """Peaks and over-limit periods per resource."""
     util = utilization(sch, projects, period=period)
     out = []
@@ -198,10 +201,13 @@ def leveling_report(sch: Schedule, projects: list[Project], period: str = "week"
                 "peak_period": peak["period"],
                 "peak_qty": round(peak["remaining_qty"] + peak["actual_qty"], 2),
                 "overallocated_periods": [
-                    {"period": x["period"],
-                     "demand": round(x["remaining_qty"] + x["actual_qty"], 2),
-                     "limit": x["limit_qty"]}
-                    for x in rows if x["overallocated"]
+                    {
+                        "period": x["period"],
+                        "demand": round(x["remaining_qty"] + x["actual_qty"], 2),
+                        "limit": x["limit_qty"],
+                    }
+                    for x in rows
+                    if x["overallocated"]
                 ],
             }
         )

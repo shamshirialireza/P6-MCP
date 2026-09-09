@@ -33,7 +33,7 @@ class CalendarNode:
 
     name: str
     data: dict[str, str] = field(default_factory=dict)
-    children: list["CalendarNode"] = field(default_factory=list)
+    children: list[CalendarNode] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -182,9 +182,7 @@ def serialize_calendar_data(cal: ParsedCalendar) -> str:
             for i, s in enumerate(shifts)
         )
 
-    days = "".join(
-        f"(0||{d}()({shift_children(cal.workweek.get(d, []))}))" for d in range(1, 8)
-    )
+    days = "".join(f"(0||{d}()({shift_children(cal.workweek.get(d, []))}))" for d in range(1, 8))
     excs = "".join(
         f"(0||{i}(d|{(dt - _EXCEL_EPOCH).days})({shift_children(shifts)}))"
         for i, (dt, shifts) in enumerate(sorted(cal.exceptions.items()))

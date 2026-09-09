@@ -14,8 +14,8 @@ P6 strips embedded tabs/newlines on export, so a record never spans lines.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import Iterator
 
 from p6_mcp.exceptions import XerEncodingError
 

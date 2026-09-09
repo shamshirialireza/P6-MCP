@@ -52,9 +52,7 @@ class Workspace:
             )
         return p
 
-    def discover(
-        self, directory: str | None = None, recursive: bool = False
-    ) -> list[Path]:
+    def discover(self, directory: str | None = None, recursive: bool = False) -> list[Path]:
         """All .xer files in the given (or every allowed) directory, sorted."""
         roots: list[Path]
         if directory is not None:

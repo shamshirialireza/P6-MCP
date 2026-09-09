@@ -61,10 +61,7 @@ def compute_cpm(
 
     incomplete = {a.task_id: a for a in activities if not a.is_completed}
     all_ids = {a.task_id for a in activities}
-    rels = [
-        r for r in sch.relationships
-        if r.task_id in all_ids and r.pred_task_id in all_ids
-    ]
+    rels = [r for r in sch.relationships if r.task_id in all_ids and r.pred_task_id in all_ids]
     preds_of: dict[int, list[Any]] = {}
     succs_of: dict[int, list[Any]] = {}
     for r in rels:
@@ -172,9 +169,7 @@ def compute_cpm(
 
     if not EF:
         return res
-    non_loe_ef = [
-        ef for t, ef in EF.items() if not incomplete[t].is_loe
-    ]
+    non_loe_ef = [ef for t, ef in EF.items() if not incomplete[t].is_loe]
     project_finish = max(non_loe_ef or EF.values())
     scd = max((p.scd_end for p in projects if p.scd_end), default=None)
     res.project_finish = project_finish
@@ -221,14 +216,13 @@ def compute_cpm(
             ls = ls_bound
         LS[tid] = ls
         LF[tid] = cal.add_work_hours(ls, dur)
-        res.total_float_hours[tid] = round(
-            cal.work_hours_between(ES[tid], ls), 4
-        )
+        res.total_float_hours[tid] = round(cal.work_hours_between(ES[tid], ls), 4)
     return res
 
 
-def compare_to_stored(sch: Schedule, res: CpmResult, tolerance_hours: float = 1.0
-                      ) -> dict[str, Any]:
+def compare_to_stored(
+    sch: Schedule, res: CpmResult, tolerance_hours: float = 1.0
+) -> dict[str, Any]:
     """Diff computed vs stored dates/float; returns summary + top deviations."""
     diffs: list[dict[str, Any]] = []
     matched = 0
@@ -244,23 +238,34 @@ def compare_to_stored(sch: Schedule, res: CpmResult, tolerance_hours: float = 1.
         if stored_es is not None and cal is not None:
             d = abs(cal.work_hours_between(stored_es, es))
             if d > tolerance_hours:
-                details["early_start"] = {"stored": stored_es, "computed": es,
-                                          "deviation_hours": round(d, 1)}
+                details["early_start"] = {
+                    "stored": stored_es,
+                    "computed": es,
+                    "deviation_hours": round(d, 1),
+                }
                 dev = max(dev, d)
         if stored_ef is not None and cal is not None:
             d = abs(cal.work_hours_between(stored_ef, res.early_finish[tid]))
             if d > tolerance_hours:
                 details["early_finish"] = {
-                    "stored": stored_ef, "computed": res.early_finish[tid],
-                    "deviation_hours": round(d, 1)}
+                    "stored": stored_ef,
+                    "computed": res.early_finish[tid],
+                    "deviation_hours": round(d, 1),
+                }
                 dev = max(dev, d)
         tf = res.total_float_hours.get(tid)
         if stored_tf is not None and tf is not None and abs(stored_tf - tf) > tolerance_hours:
             details["total_float"] = {"stored_hours": stored_tf, "computed_hours": tf}
             dev = max(dev, abs(stored_tf - tf))
         if details:
-            diffs.append({"task_code": a.code, "task_name": a.name,
-                          "max_deviation_hours": round(dev, 1), **details})
+            diffs.append(
+                {
+                    "task_code": a.code,
+                    "task_name": a.name,
+                    "max_deviation_hours": round(dev, 1),
+                    **details,
+                }
+            )
         else:
             matched += 1
     diffs.sort(key=lambda d: -float(d["max_deviation_hours"]))
