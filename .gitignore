@@ -1,19 +1,35 @@
-.venv/
-.idea/
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+
+# Virtual environment
+.venv/
+
+# Testing
 .pytest_cache/
-.mypy_cache/
-.ruff_cache/
 .coverage
 coverage.xml
+
+# Type checking & linting
+.mypy_cache/
+.ruff_cache/
+
+# Build artifacts
 dist/
 build/
-*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+
+# Environment
+.env
+
+# Docs build
+site/
+
+# Large test fixtures (not committed)
 tests/fixtures/xer/large_50k.xer
 tests/fixtures/xer/medium_5k.xer
-.env
-site/
-graphify-out/
-stderr*.txt
-stdout*.txt
