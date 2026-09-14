@@ -56,6 +56,8 @@ dev = [
     "ruff>=0.5",
     "pre-commit>=3.7",
     "openpyxl>=3.1",
+    "build",
+    "twine",
 ]
 
 [tool.hatch.build.targets.wheel]
