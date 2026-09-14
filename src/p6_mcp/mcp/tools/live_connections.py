@@ -134,6 +134,90 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
         # 3. Return the results
         raise NotImplementedError("P6 EPPM raw query not yet implemented")
 
+    @mcp.tool(title="Apply actuals to P6 EPPM project", annotations=READ_ONLY)
+    @tool_errors
+    def p6_apply_actuals(connection_name: str) -> dict[str, Any]:
+        """Apply actuals to a P6 EPPM project from performance data."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_apply_actuals is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
+    @mcp.tool(title="Assign project baseline in P6 EPPM", annotations=READ_ONLY)
+    @tool_errors
+    def p6_assign_project_baseline(connection_name: str) -> dict[str, Any]:
+        """Assign a baseline to a P6 EPPM project for performance tracking."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_assign_project_baseline is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
+    @mcp.tool(title="Compare live P6 EPPM project to XER file", annotations=READ_ONLY)
+    @tool_errors
+    def p6_compare_live_to_xer(connection_name: str) -> dict[str, Any]:
+        """Compare a live P6 EPPM project with an exported XER file."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_compare_live_to_xer is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
+    @mcp.tool(title="Create baseline in P6 EPPM project", annotations=READ_ONLY)
+    @tool_errors
+    def p6_create_baseline(connection_name: str) -> dict[str, Any]:
+        """Create a baseline copy of a P6 EPPM project's current schedule."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_create_baseline is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
+    @mcp.tool(title="Export P6 EPPM project to file", annotations=READ_ONLY)
+    @tool_errors
+    def p6_export_project(connection_name: str) -> dict[str, Any]:
+        """Export a P6 EPPM project to XML, XER, or other format."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_export_project is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
+    @mcp.tool(title="Import P6 EPPM project from file", annotations=READ_ONLY)
+    @tool_errors
+    def p6_import_project(connection_name: str) -> dict[str, Any]:
+        """Import a P6 EPPM project from XML, XER, or other format."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_import_project is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
+    @mcp.tool(title="Update P6 EPPM project data date", annotations=READ_ONLY)
+    @tool_errors
+    def p6_update_project_data_date(connection_name: str) -> dict[str, Any]:
+        """Update the data date for a P6 EPPM project to reflect current status."""
+        return {
+            "error": {
+                "code": "NOT_IMPLEMENTED",
+                "message": "p6_update_project_data_date is not yet implemented. Connect to a live P6 EPPM instance to use this tool.",
+                "hint": "See docs for P6 EPPM setup."
+            }
+        }
+
     _ = (
         p6_list_connections,
         p6_test_connection,
@@ -143,4 +227,11 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
         p6_close,
         p6_get_fields,
         p6_raw_query,
+        p6_apply_actuals,
+        p6_assign_project_baseline,
+        p6_compare_live_to_xer,
+        p6_create_baseline,
+        p6_export_project,
+        p6_import_project,
+        p6_update_project_data_date,
     )

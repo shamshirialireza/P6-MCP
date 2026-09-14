@@ -165,7 +165,7 @@ class Activity(Entity):
 
     @property
     def cstr_type(self) -> str | None:
-        return self.f("cstr_type")
+        return self.f("cstr_type")  # type: ignore[no-any-return]
 
     @property
     def cstr_label(self) -> str | None:

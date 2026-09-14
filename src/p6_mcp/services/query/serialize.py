@@ -94,7 +94,7 @@ def activity_to_dict(
         )
     if verbosity == "full":
         d["raw_fields"] = a.to_dict()
-    return iso(select_fields(d, fields))
+    return iso(select_fields(d, fields))  # type: ignore[no-any-return]
 
 
 def relationship_to_dict(sch: Schedule, r: Relationship) -> dict[str, Any]:
@@ -117,7 +117,7 @@ def relationship_to_dict(sch: Schedule, r: Relationship) -> dict[str, Any]:
             "crosses_projects": r.crosses_projects,
             "comments": r.f("comments"),
         }
-    )
+    )  # type: ignore[no-any-return]
 
 
 def project_to_dict(sch: Schedule, p: Project, verbosity: str = "standard") -> dict[str, Any]:
@@ -138,7 +138,7 @@ def project_to_dict(sch: Schedule, p: Project, verbosity: str = "standard") -> d
     }
     if verbosity == "full":
         d["raw_fields"] = p.to_dict()
-    return iso(d)
+    return iso(d)  # type: ignore[no-any-return]
 
 
 def wbs_to_dict(sch: Schedule, w: Wbs, verbosity: str = "standard") -> dict[str, Any]:

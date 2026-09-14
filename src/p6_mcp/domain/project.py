@@ -59,7 +59,7 @@ class Project(Entity):
 
     @property
     def critical_path_type(self) -> str | None:
-        return self.f("critical_path_type")
+        return self.f("critical_path_type")  # type: ignore[no-any-return]
 
     @property
     def critical_path_type_label(self) -> str | None:
