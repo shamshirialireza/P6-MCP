@@ -2,12 +2,12 @@
 
 [![PyPI](https://img.shields.io/pypi/v/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
-[![License](https://img.shields.io/pypi/l/p6-mcp.svg)](https://github.com/alireza/P6-MCP/blob/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/alireza/P6-MCP/ci.yml)](https://github.com/alireza/P6-MCP/actions)
-[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](https://github.com/alireza/P6-MCP/actions)
-[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-p6--mcp-brightgreen)](https://smithery.ai/@alireza/p6-mcp)
-[![Smithery](https://img.shields.io/badge/Smithery-p6--mcp-brightgreen)](https://smithery.ai/@alireza/p6-mcp)
-[![Docker](https://img.shields.io/docker/pulls/alireza/p6-mcp)](https://hub.docker.com/r/alireza/p6-mcp)
+[![License](https://img.shields.io/pypi/l/p6-mcp.svg)](https://github.com/alirezashamshiri/P6-MCP/blob/main/LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/alirezashamshiri/P6-MCP/ci.yml)](https://github.com/alirezashamshiri/P6-MCP/actions)
+[![Coverage](https://codecov.io/gh/alirezashamshiri/P6-MCP/branch/main/graph/badge.svg)](https://codecov.io/gh/alirezashamshiri/P6-MCP)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-p6--mcp-brightgreen)](https://smithery.ai/@alirezashamshiri/p6-mcp)
+[![Smithery](https://img.shields.io/badge/Smithery-p6--mcp-brightgreen)](https://smithery.ai/@alirezashamshiri/p6-mcp)
+[![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue)](https://github.com/alirezashamshiri/P6-MCP/pkgs/container/p6-mcp)
 
 ## Primavera P6 MCP Server
 
@@ -173,15 +173,15 @@ See [client documentation](docs/clients/) for copy-paste configurations.
 |  | p6_get_job_log | ❌ | ✅ |  |
 |  | p6_cancel_job | ❌ | ✅ |  |
 |  | p6_list_jobs | ❌ | ✅ |  |
-|  | p6_create_baseline | ❠ | ✅ |  |
-|  | p6_assign_project_baseline | ❠ | ✅ |  |
-|  | p6_export_project | ❠ | ✅ |  |
-|  | p6_import_project | ❠ | ✅ |  |
-|  | p6_update_project_data_date | ❠ | ✅ |  |
-|  | p6_checkout_status | ❠ | ✅ |  |
-|  | p6_global_change_preview | ❠ | ✅ |  |
-|  | p6_compare_live_to_xer | ❠ | ✅ |  |
-|  | p6_watch_project | ❠ | ✅ |  |
+|  | p6_create_baseline | ⚠️ | ✅ |  |
+|  | p6_assign_project_baseline | ⚠️ | ✅ |  |
+|  | p6_export_project | ⚠️ | ✅ |  |
+|  | p6_import_project | ⚠️ | ✅ |  |
+|  | p6_update_project_data_date | ⚠️ | ✅ |  |
+|  | p6_checkout_status | ⚠️ | ✅ |  |
+|  | p6_global_change_preview | ⚠️ | ✅ |  |
+|  | p6_compare_live_to_xer | ⚠️ | ✅ |  |
+|  | p6_watch_project | ⚠️ | ✅ |  |
 
 *Footnotes:*
 - *Live P6 EPPM backend capabilities may vary depending on P6 EPPM release and configured permissions*
