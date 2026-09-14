@@ -339,3 +339,112 @@ def register_resources(mcp: MCPServer, ctx: AppContext) -> None:
         relationships,
         data_dictionary,
     )
+
+
+# Live P6 EPPM resources (§15.6)
+def _register_live_resources(mcp: MCPServer, ctx: AppContext) -> None:
+    """Register live P6 EPPM resource templates."""
+
+    @mcp.resource(
+        "p6://{connection}/projects",
+        mime_type=JSON,
+        name="P6 EPPM projects",
+        description="Projects and baselines from a P6 EPPM connection.",
+    )
+    def p6_projects(connection: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to get projects
+        # 3. Return project information
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'
+
+    @mcp.resource(
+        "p6://{connection}/projects/{project_id}/summary",
+        mime_type="text/markdown",
+        name="P6 EPPM project summary",
+        description="Executive summary for a P6 EPPM project.",
+    )
+    def p6_project_summary(connection: str, project_id: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to load the project
+        # 3. Generate an executive summary
+        return "# P6 EPPM Project Summary\n\nLive P6 EPPM resources not yet implemented."
+
+    @mcp.resource(
+        "p6://{connection}/projects/{project_id}/critical-path",
+        mime_type=JSON,
+        name="P6 EPPM critical path",
+        description="Critical activities by total float and longest path.",
+    )
+    def p6_project_critical_path(connection: str, project_id: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to load the project
+        # 3. Calculate and return critical path
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'
+
+    @mcp.resource(
+        "p6://{connection}/projects/{project_id}/milestones",
+        mime_type=JSON,
+        name="P6 EPPM milestones",
+        description="Milestones with dates and baseline variance.",
+    )
+    def p6_project_milestones(connection: str, project_id: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to load the project
+        # 3. Return milestone information
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'
+
+    @mcp.resource(
+        "p6://{connection}/projects/{project_id}/dcma",
+        mime_type=JSON,
+        name="P6 EPPM DCMA assessment",
+        description="Full DCMA 14-point result with default thresholds.",
+    )
+    def p6_project_dcma(connection: str, project_id: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to load the project
+        # 3. Run DCMA assessment and return results
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'
+
+    @mcp.resource(
+        "p6://{connection}/projects/{project_id}/earned-value",
+        mime_type=JSON,
+        name="P6 EPPM earned value",
+        description="EVM metrics with PV time-phased to the data date.",
+    )
+    def p6_project_earned_value(connection: str, project_id: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to load the project
+        # 3. Calculate and return EVM metrics
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'
+
+    @mcp.resource(
+        "p6://{connection}/projects/{project_id}/health",
+        mime_type=JSON,
+        name="P6 EPPM health score",
+        description="Composite 0-100 health score with breakdown.",
+    )
+    def p6_project_health(connection: str, project_id: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to load the project
+        # 3. Calculate and return health score
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'
+
+    @mcp.resource(
+        "p6://{connection}/fields/{service}",
+        mime_type=JSON,
+        name="P6 EPPM service fields",
+        description="Field definitions for a P6 EPPM REST service.",
+    )
+    def p6_service_fields(connection: str, service: str) -> str:
+        # In a real implementation, this would:
+        # 1. Get connection details from configuration
+        # 2. Use the P6EppmRepository to get field definitions
+        # 3. Return the field information
+        return '{"error": "Live P6 EPPM resources not yet implemented"}'

@@ -190,6 +190,20 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
                 )
         return ctx.page(iso(rows), limit, offset)
 
+    @mcp.tool(title="Get cost by account", annotations=READ_ONLY)
+    @tool_errors
+    def get_cost_by_account(
+        file_path: str,
+        project_id: int | None = None,
+        project_short_name: str | None = None,
+    ) -> dict[str, Any]:
+        """Budgeted, actual, and remaining cost grouped by cost account (PROJCOST)."""
+        sch, projects = ctx.scope(file_path, project_id, project_short_name)
+        from p6_mcp.services.analysis.cost import cost_by_account
+        res = cost_by_account(sch, projects)
+        groups = res.pop("groups")
+        return ctx.page(iso(groups), extra=iso(res))
+
     _ = (
         get_cost_summary,
         get_cash_flow,
@@ -197,4 +211,5 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
         get_earned_value_curve,
         get_financial_periods,
         get_past_period_actuals,
+        get_cost_by_account,
     )

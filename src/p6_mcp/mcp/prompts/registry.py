@@ -399,3 +399,61 @@ P6 concept at all, say so rather than inventing one."""
         logic_repair_plan,
         explain_p6_concept,
     )
+
+    # Register live P6 EPPM prompts
+    _register_live_prompts(mcp, ctx)
+
+
+# Live P6 EPPM prompts (§15.6)
+def _register_live_prompts(mcp: MCPServer, ctx: AppContext) -> None:
+    """Register live P6 EPPM prompt templates."""
+
+    @mcp.prompt(title="Live P6 EPPM change request")
+    def live_change_request(connection: str, project: str, request_text: str) -> str:
+        """Process a natural language change request for a live P6 EPPM project."""
+        return f"""Process this change request for P6 EPPM project `{project}` on connection `{connection}`:
+
+{request_text}
+
+Follow the live P6 EPPM safety protocol:
+1. Open the project: `p6_open_project(connection="{connection}", project_id={project})`
+2. Run relevant read tools to understand the current state
+3. Build the change plan with `dry_run=True`
+4. Present the plan to the user for review
+5. Wait for explicit user confirmation
+6. Apply the changes with `confirm=True` and the plan ID
+7. Optionally run schedule job to update dates/float
+8. Verify the changes were applied correctly
+9. Report the results
+
+Note: Live P6 EPPM functionality is not yet fully implemented."""
+
+    @mcp.prompt(title="Weekly status update live")
+    def weekly_status_update_live(connection: str, project: str) -> str:
+        """Generate a weekly status update for a live P6 EPPM project."""
+        return f"""Generate a weekly status update for P6 EPPM project `{project}` on connection `{connection}`:
+
+1. Apply any pending actuals (if instructed)
+2. Update the data date to today
+3. Run the schedule job to recalculate dates and float
+4. Generate a variance report vs. baseline
+5. Report on completed work, upcoming work, and any issues
+
+Note: Live P6 EPPM functionality is not yet fully implemented."""
+
+    @mcp.prompt(title="Live P6 EPPM logic repair")
+    def live_logic_repair(connection: str, project: str) -> str:
+        """Analyze and repair logic issues in a live P6 EPPM project."""
+        return f"""Analyze and repair logic issues in P6 EPPM project `{project}` on connection `{connection}`:
+
+1. Load the project: `p6_open_project(connection="{connection}", project_id={project})`
+2. Run logic health analysis: `analyze_logic_health`
+3. Identify specific logic defects (open ends, circular logic, out-of-sequence, etc.)
+4. Prioritize repairs by impact on forecast reliability
+5. For each defect, build a change plan with dry-run
+6. Present plans to user for approval
+7. Apply approved changes via live mutation tools
+8. Run schedule job to update dates/float
+9. Verify repairs were successful
+
+Note: Live P6 EPPM functionality is not yet fully implemented."""
