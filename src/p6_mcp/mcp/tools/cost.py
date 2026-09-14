@@ -200,6 +200,7 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
         """Budgeted, actual, and remaining cost grouped by cost account (PROJCOST)."""
         sch, projects = ctx.scope(file_path, project_id, project_short_name)
         from p6_mcp.services.analysis.cost import cost_by_account
+
         res = cost_by_account(sch, projects)
         groups = res.pop("groups")
         return ctx.page(iso(groups), extra=iso(res))

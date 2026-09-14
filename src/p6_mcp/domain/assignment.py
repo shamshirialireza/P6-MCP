@@ -5,10 +5,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from p6_mcp.domain.base import Entity, label_of
+from p6_mcp.domain.base import Entity
 
 if TYPE_CHECKING:
-    from p6_mcp.parser.reader import Table
+    pass
+
 
 class Assignment(Entity):
     """One TASKRSRC row with typed accessors."""

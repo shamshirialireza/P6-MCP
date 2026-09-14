@@ -28,7 +28,9 @@ class Settings(BaseSettings):
         description="Directory exports and mutated XER files are written to. "
         "Defaults to the first allowed directory.",
     )
-    cache_size: int = Field(default=1000, ge=1, description="Max parsed schedules kept in LRU cache.")
+    cache_size: int = Field(
+        default=1000, ge=1, description="Max parsed schedules kept in LRU cache."
+    )
     max_output_bytes: int = Field(
         default=65536,
         ge=1_000,

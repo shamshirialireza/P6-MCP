@@ -8,10 +8,11 @@ from typing import TYPE_CHECKING
 from p6_mcp.domain.base import Entity, label_of
 
 if TYPE_CHECKING:
-    from p6_mcp.parser.reader import Table
+    pass
 
 # Enums from base.py would be imported here if needed
 # For now, we'll reference them as strings and let base.label_of handle translation
+
 
 class Wbs(Entity):
     """One PROJWBS row with typed accessors and schedule-semantics helpers."""
@@ -37,7 +38,15 @@ class Wbs(Entity):
     @property
     def status_label(self) -> str | None:
         # Assuming WS_* status codes - would need to check actual P6 codes
-        return label_of({"WS_Open": "Active", "WS_Closed": "Inactive", "WS_Planned": "Planned", "WS_NotStarted": "What-If"}, self.status)
+        return label_of(
+            {
+                "WS_Open": "Active",
+                "WS_Closed": "Inactive",
+                "WS_Planned": "Planned",
+                "WS_NotStarted": "What-If",
+            },
+            self.status,
+        )
 
     @property
     def anticip_start_date(self) -> datetime | None:

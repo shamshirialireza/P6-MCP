@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from enum import Enum
 from typing import Any, Protocol, runtime_checkable
 
 from p6_mcp.domain.activity import Activity
@@ -190,7 +191,9 @@ class MutableScheduleRepository(ScheduleRepository, Protocol):
     def cancel_job(self, job_id: str) -> bool:
         """Cancel a running job."""
         ...
-from enum import Enum
+
+
+
 
 class QueryMode(Enum):
     AUTODETECT = "autodetect"

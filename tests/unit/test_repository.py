@@ -1,27 +1,21 @@
 """Unit tests for the repository module."""
 
-import pytest
-from unittest.mock import Mock, patch
-from pathlib import Path
+from unittest.mock import Mock
 
-from p6_mcp.repository.protocol import (
-    ScheduleRepository,
-    MutableScheduleRepository,
-    QueryMode
-)
-from p6_mcp.repository.workspace import Workspace
 from p6_mcp.config import Settings
+from p6_mcp.repository.protocol import MutableScheduleRepository, QueryMode, ScheduleRepository
+from p6_mcp.repository.workspace import Workspace
 
 
 def test_schedule_repository_is_protocol():
     """Test that ScheduleRepository is a Protocol (can't be instantiated directly)."""
     # This is a structural test - we mainly verify it exists and has the right methods
-    assert hasattr(ScheduleRepository, '__call__')  # Protocols are callable for isinstance checks
+    assert callable(ScheduleRepository)  # Protocols are callable for isinstance checks
 
 
 def test_mutable_schedule_repository_is_protocol():
     """Test that MutableScheduleRepository is a Protocol."""
-    assert hasattr(MutableScheduleRepository, '__call__')
+    assert callable(MutableScheduleRepository)
 
 
 def test_query_mode_enum():
@@ -37,9 +31,9 @@ def test_workspace_integration_with_repository():
     workspace = Workspace(settings)
 
     # Test that workspace has the expected attributes
-    assert hasattr(workspace, '_settings')
-    assert hasattr(workspace, 'allowed')
-    assert hasattr(workspace, 'output_dir')
+    assert hasattr(workspace, "_settings")
+    assert hasattr(workspace, "allowed")
+    assert hasattr(workspace, "output_dir")
 
     # Test that we can create a mock repository that uses workspace
     mock_repo = Mock(spec=ScheduleRepository)

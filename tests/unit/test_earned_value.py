@@ -1,8 +1,6 @@
 """Unit tests for the earned value analysis module."""
 
 from p6_mcp.services.analysis.earned_value import earned_value
-from p6_mcp.domain.schedule import Schedule
-from p6_mcp.parser.reader import XerDocument
 
 
 def test_earned_value_import():

@@ -8,7 +8,8 @@ from typing import TYPE_CHECKING
 from p6_mcp.domain.base import Entity
 
 if TYPE_CHECKING:
-    from p6_mcp.parser.reader import Table
+    pass
+
 
 class ResourceRate(Entity):
     """One RSRCRATE row - resource rates."""

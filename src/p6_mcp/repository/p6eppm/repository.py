@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import base64
-import json
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -21,7 +20,7 @@ from p6_mcp.domain.step import Step
 from p6_mcp.domain.udf import UdfType, UdfValue
 from p6_mcp.domain.wbs import Wbs
 from p6_mcp.exceptions import P6McpError
-from p6_mcp.repository.protocol import MutableScheduleRepository, ScheduleRepository
+from p6_mcp.repository.protocol import MutableScheduleRepository
 
 
 class P6EppmRepository(MutableScheduleRepository):
@@ -95,9 +94,7 @@ class P6EppmRepository(MutableScheduleRepository):
         response = client.post(
             f"{self.base_url}/p6ws/oauth/token",
             headers={
-                "authToken": base64.b64encode(
-                    f"{self.username}:{self.password}".encode()
-                ).decode(),
+                "authToken": base64.b64encode(f"{self.username}:{self.password}".encode()).decode(),
                 "token_exp": "3600",  # 1 hour
                 "return_json": "true",
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -296,7 +293,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 projects.append(project)
             return projects
         except Exception as e:
-            raise P6McpError(f"Failed to load projects: {e}")
+            raise P6McpError(f"Failed to load projects: {e}") from e
 
     def get_project(self, project_id: int) -> Project:
         """Get a specific project by ID."""
@@ -321,7 +318,7 @@ class P6EppmRepository(MutableScheduleRepository):
             project._status = item.get("Status")
             return project
         except Exception as e:
-            raise P6McpError(f"Failed to load project {project_id}: {e}")
+            raise P6McpError(f"Failed to load project {project_id}: {e}") from e
 
     def get_activities(self, project_id: int) -> list[Activity]:
         """Get all activities for a project."""
@@ -360,7 +357,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 activities.append(activity)
             return activities
         except Exception as e:
-            raise P6McpError(f"Failed to load activities for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load activities for project {project_id}: {e}") from e
 
     def get_activity(self, activity_id: int) -> Activity:
         """Get a specific activity by ID."""
@@ -399,7 +396,7 @@ class P6EppmRepository(MutableScheduleRepository):
             activity._remaining_cost = item.get("RemainingCost")
             return activity
         except Exception as e:
-            raise P6McpError(f"Failed to load activity {activity_id}: {e}")
+            raise P6McpError(f"Failed to load activity {activity_id}: {e}") from e
 
     def get_relationships(self, project_id: int) -> list[dict[str, Any]]:
         """Get all relationships (TASKPRED) for a project."""
@@ -412,7 +409,7 @@ class P6EppmRepository(MutableScheduleRepository):
             )
             return data
         except Exception as e:
-            raise P6McpError(f"Failed to load relationships for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load relationships for project {project_id}: {e}") from e
 
     def get_resources(self, project_id: int) -> list[Resource]:
         """Get all resources for a project."""
@@ -439,7 +436,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 resources.append(resource)
             return resources
         except Exception as e:
-            raise P6McpError(f"Failed to load resources for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load resources for project {project_id}: {e}") from e
 
     def get_resource(self, resource_id: int) -> Resource:
         """Get a specific resource by ID."""
@@ -465,7 +462,7 @@ class P6EppmRepository(MutableScheduleRepository):
             resource._standard_rate = item.get("StandardRate")
             return resource
         except Exception as e:
-            raise P6McpError(f"Failed to load resource {resource_id}: {e}")
+            raise P6McpError(f"Failed to load resource {resource_id}: {e}") from e
 
     def get_roles(self, project_id: int) -> list[Role]:
         """Get all roles for a project."""
@@ -488,7 +485,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 roles.append(role)
             return roles
         except Exception as e:
-            raise P6McpError(f"Failed to load roles for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load roles for project {project_id}: {e}") from e
 
     def get_role(self, role_id: int) -> Role:
         """Get a specific role by ID."""
@@ -510,7 +507,7 @@ class P6EppmRepository(MutableScheduleRepository):
             )
             return role
         except Exception as e:
-            raise P6McpError(f"Failed to load role {role_id}: {e}")
+            raise P6McpError(f"Failed to load role {role_id}: {e}") from e
 
     def get_wbs_nodes(self, project_id: int) -> list[Wbs]:
         """Get all WBS nodes for a project."""
@@ -532,7 +529,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 wbs_nodes.append(wbs)
             return wbs_nodes
         except Exception as e:
-            raise P6McpError(f"Failed to load WBS nodes for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load WBS nodes for project {project_id}: {e}") from e
 
     def get_wbs_node(self, wbs_id: int) -> Wbs:
         """Get a specific WBS node by ID."""
@@ -554,7 +551,7 @@ class P6EppmRepository(MutableScheduleRepository):
             )
             return wbs
         except Exception as e:
-            raise P6McpError(f"Failed to load WBS node {wbs_id}: {e}")
+            raise P6McpError(f"Failed to load WBS node {wbs_id}: {e}") from e
 
     def get_calendars(self, project_id: int) -> list[Calendar]:
         """Get all calendars referenced by a project."""
@@ -577,7 +574,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 calendars.append(calendar)
             return calendars
         except Exception as e:
-            raise P6McpError(f"Failed to load calendars for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load calendars for project {project_id}: {e}") from e
 
     def get_calendar(self, calendar_id: int) -> Calendar:
         """Get a specific calendar by ID."""
@@ -599,7 +596,7 @@ class P6EppmRepository(MutableScheduleRepository):
             )
             return calendar
         except Exception as e:
-            raise P6McpError(f"Failed to load calendar {calendar_id}: {e}")
+            raise P6McpError(f"Failed to load calendar {calendar_id}: {e}") from e
 
     def get_expenses(self, project_id: int) -> list[Expense]:
         """Get all expenses for a project."""
@@ -615,7 +612,9 @@ class P6EppmRepository(MutableScheduleRepository):
                 expense = Expense(
                     guid=item.get("ObjectId", ""),
                     task_id=int(item.get("TaskID", 0)),
-                    acct_id=int(item.get("CostAccountObjectId", 0)) if item.get("CostAccountObjectId") else None,
+                    acct_id=int(item.get("CostAccountObjectId", 0))
+                    if item.get("CostAccountObjectId")
+                    else None,
                     budgeted_cost=float(item.get("TargetCost", 0)),
                     actual_cost=float(item.get("ActualCost", 0)),
                     remaining_cost=float(item.get("RemainingCost", 0)),
@@ -623,7 +622,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 expenses.append(expense)
             return expenses
         except Exception as e:
-            raise P6McpError(f"Failed to load expenses for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load expenses for project {project_id}: {e}") from e
 
     def get_expense(self, expense_id: int) -> Expense:
         """Get a specific expense by ID."""
@@ -640,14 +639,16 @@ class P6EppmRepository(MutableScheduleRepository):
             expense = Expense(
                 guid=item.get("ObjectId", ""),
                 task_id=int(item.get("TaskID", 0)),
-                acct_id=int(item.get("CostAccountObjectId", 0)) if item.get("CostAccountObjectId") else None,
+                acct_id=int(item.get("CostAccountObjectId", 0))
+                if item.get("CostAccountObjectId")
+                else None,
                 budgeted_cost=float(item.get("TargetCost", 0)),
                 actual_cost=float(item.get("ActualCost", 0)),
                 remaining_cost=float(item.get("RemainingCost", 0)),
             )
             return expense
         except Exception as e:
-            raise P6McpError(f"Failed to load expense {expense_id}: {e}")
+            raise P6McpError(f"Failed to load expense {expense_id}: {e}") from e
 
     def get_udf_types(self) -> list[UdfType]:
         """Get all UDF types."""
@@ -669,7 +670,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 udf_types.append(udf_type)
             return udf_types
         except Exception as e:
-            raise P6McpError(f"Failed to load UDF types: {e}")
+            raise P6McpError(f"Failed to load UDF types: {e}") from e
 
     def get_udf_values(self, udf_type_id: int) -> list[UdfValue]:
         """Get all UDF values for a UDF type."""
@@ -690,7 +691,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 udf_values.append(udf_value)
             return udf_values
         except Exception as e:
-            raise P6McpError(f"Failed to load UDF values for type {udf_type_id}: {e}")
+            raise P6McpError(f"Failed to load UDF values for type {udf_type_id}: {e}") from e
 
     def get_steps(self, project_id: int) -> list[Step]:
         """Get all steps for a project."""
@@ -711,7 +712,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 steps.append(step)
             return steps
         except Exception as e:
-            raise P6McpError(f"Failed to load steps for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load steps for project {project_id}: {e}") from e
 
     def get_step(self, step_id: int) -> Step:
         """Get a specific step by ID."""
@@ -732,7 +733,7 @@ class P6EppmRepository(MutableScheduleRepository):
             )
             return step
         except Exception as e:
-            raise P6McpError(f"Failed to load step {step_id}: {e}")
+            raise P6McpError(f"Failed to load step {step_id}: {e}") from e
 
     def get_notebooks(self, project_id: int) -> list[Notebook]:
         """Get all notebooks for a project."""
@@ -753,7 +754,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 notebooks.append(notebook)
             return notebooks
         except Exception as e:
-            raise P6McpError(f"Failed to load notebooks for project {project_id}: {e}")
+            raise P6McpError(f"Failed to load notebooks for project {project_id}: {e}") from e
 
     def get_notebook(self, notebook_id: int) -> Notebook:
         """Get a specific notebook by ID."""
@@ -774,7 +775,7 @@ class P6EppmRepository(MutableScheduleRepository):
             )
             return notebook
         except Exception as e:
-            raise P6McpError(f"Failed to load notebook {notebook_id}: {e}")
+            raise P6McpError(f"Failed to load notebook {notebook_id}: {e}") from e
 
     def get_baselines(self) -> list[BaselineProject]:
         """Get all baseline projects."""
@@ -799,7 +800,7 @@ class P6EppmRepository(MutableScheduleRepository):
                 baselines.append(baseline)
             return baselines
         except Exception as e:
-            raise P6McpError(f"Failed to load baselines: {e}")
+            raise P6McpError(f"Failed to load baselines: {e}") from e
 
     def get_baseline(self, baseline_id: int) -> BaselineProject:
         """Get a specific baseline by ID."""
@@ -824,7 +825,7 @@ class P6EppmRepository(MutableScheduleRepository):
             baseline._sum_base_proj_id = item.get("SumBaseProjId")
             return baseline
         except Exception as e:
-            raise P6McpError(f"Failed to load baseline {baseline_id}: {e}")
+            raise P6McpError(f"Failed to load baseline {baseline_id}: {e}") from e
 
     # Implementation of MutableScheduleRepository protocol
 

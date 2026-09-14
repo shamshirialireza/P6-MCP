@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  p6-mcp:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./xer_files:/data
+    environment:
+      - P6MCP_WORKSPACE_DIRS=/data
+      - P6MCP_OUTPUT_DIR=/tmp/p6mcp_output
+      - P6MCP_ENABLE_MUTATION=false
+    restart: unless-stopped

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        run: pip install uv
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+      - name: Lint
+        run: python -m ruff check src/ tests/
+      - name: Test
+        run: python -m pytest tests/ --cov=p6_mcp --cov-report=xml -q
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.11'
+        with:
+          file: coverage.xml
+        continue-on-error: true

@@ -8,8 +8,6 @@ from mcp.server.mcpserver import MCPServer
 
 from p6_mcp.mcp.context import AppContext, tool_errors
 from p6_mcp.mcp.tools.files import READ_ONLY
-from p6_mcp.repository.loader import ScheduleLoader
-from p6_mcp.services.query.serialize import iso
 
 
 def register(mcp: MCPServer, ctx: AppContext) -> None:
@@ -21,10 +19,12 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
         """List configured P6 EPPM connections (never returns secrets)."""
         # In a real implementation, this would read from configuration
         # For now, return placeholder data
-        return ctx.guard({
-            "total": 0,
-            "items": [],
-        })
+        return ctx.guard(
+            {
+                "total": 0,
+                "items": [],
+            }
+        )
 
     @mcp.tool(title="Test P6 EPPM connection", annotations=READ_ONLY)
     @tool_errors
@@ -74,16 +74,18 @@ def register(mcp: MCPServer, ctx: AppContext) -> None:
             # schedule_id = ctx.loader.load(f"p6://{connection}/{project_id_int}")
             # For now, return placeholder
             schedule_id = f"p6-{connection}-{project_id_int}"
-            return ctx.guard({
-                "schedule_id": schedule_id,
-                "load_stats": {
-                    "tables_loaded": 0,
-                    "warnings": [],
-                },
-                "last_update_date": None,
-            })
+            return ctx.guard(
+                {
+                    "schedule_id": schedule_id,
+                    "load_stats": {
+                        "tables_loaded": 0,
+                        "warnings": [],
+                    },
+                    "last_update_date": None,
+                }
+            )
         except ValueError:
-            raise ValueError("Project ID must be an integer")
+            raise ValueError("Project ID must be an integer") from None
 
     @mcp.tool(title="Refresh P6 EPPM project", annotations=READ_ONLY)
     @tool_errors
