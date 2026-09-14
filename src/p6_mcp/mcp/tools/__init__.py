@@ -32,6 +32,7 @@ GROUPS: tuple[str, ...] = (
     "exports",
     "mutations",
     "meta",
+    "live_connections",
 )
 
 

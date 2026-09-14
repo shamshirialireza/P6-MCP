@@ -290,7 +290,7 @@ def cmd_export(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     """The full CLI argument parser."""
     p = argparse.ArgumentParser(
-        prog="p6-mcp",
+        prog="P6-MCP",
         description="MCP server and CLI for Primavera P6 XER schedule files.",
     )
     p.add_argument("--version", action="version", version=f"p6-mcp {__version__}")

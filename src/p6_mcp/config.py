@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     )
 
     allowed_dirs: list[Path] = Field(
-        default_factory=lambda: [Path.cwd()],
+        default_factory=list,
         description="Directories .xer files may be read from (path-traversal guarded).",
     )
     output_dir: Path | None = Field(
@@ -28,9 +28,9 @@ class Settings(BaseSettings):
         description="Directory exports and mutated XER files are written to. "
         "Defaults to the first allowed directory.",
     )
-    cache_size: int = Field(default=8, ge=1, description="Max parsed schedules kept in LRU cache.")
+    cache_size: int = Field(default=1000, ge=1, description="Max parsed schedules kept in LRU cache.")
     max_output_bytes: int = Field(
-        default=200_000,
+        default=65536,
         ge=1_000,
         description="Serialized tool-output byte budget before truncation.",
     )
@@ -61,11 +61,16 @@ class Settings(BaseSettings):
 
     def resolved_allowed_dirs(self) -> list[Path]:
         """Absolute, resolved allowed directories."""
+        if not self.allowed_dirs:
+            return [Path.cwd().expanduser().resolve()]
         return [p.expanduser().resolve() for p in self.allowed_dirs]
 
     def resolved_output_dir(self) -> Path:
         """Absolute output directory (first allowed dir when unset)."""
-        base = self.output_dir if self.output_dir is not None else self.allowed_dirs[0]
+        if self.output_dir is not None:
+            base = self.output_dir
+        else:
+            base = self.resolved_allowed_dirs()[0]
         return base.expanduser().resolve()
 
     def mutation_allowed(self) -> bool:

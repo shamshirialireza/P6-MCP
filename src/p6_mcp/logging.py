@@ -33,7 +33,11 @@ def configure_logging(level: str = "INFO", log_json: bool = False) -> None:
     root = logging.getLogger("p6_mcp")
     root.handlers.clear()
     root.addHandler(handler)
-    root.setLevel(level.upper())
+    try:
+        root.setLevel(level.upper())
+    except ValueError:
+        # Fall back to INFO if the level is invalid
+        root.setLevel(logging.INFO)
 
 
 def get_logger(name: str) -> logging.Logger:

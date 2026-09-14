@@ -24,7 +24,7 @@ class Workspace:
         """Resolve a read path; raises if outside allowed dirs or missing."""
         p = Path(path).expanduser()
         if not p.is_absolute():
-            p = self.allowed[0] / p
+            p = Path.cwd() / p
         p = p.resolve()
         if not self._inside_allowed(p):
             raise WorkspaceError(

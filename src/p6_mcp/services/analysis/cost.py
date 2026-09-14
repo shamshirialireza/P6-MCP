@@ -221,3 +221,11 @@ def cash_flow(
         "periods": rows,
         "totals": {k: round(sum(v.values()), 2) for k, v in series.items()},
     }
+
+
+def cost_by_account(
+    sch: Schedule,
+    projects: list[Project],
+) -> dict[str, Any]:
+    """Cost grouped by cost account (PROJCOST)."""
+    return cost_summary(sch, projects, group_by="account")

@@ -1,0 +1,32 @@
+"""Unit tests for the CLI module."""
+
+import pytest
+from p6_mcp.cli import main
+
+
+def test_cli_import():
+    """Test that the CLI module can be imported."""
+    assert main is not None
+
+
+def test_cli_main_help(capsys):
+    """Test that CLI main function handles --help flag."""
+    with pytest.raises(SystemExit) as exc_info:
+        main(["--help"])
+    assert exc_info.value.code == 0
+
+    captured = capsys.readouterr()
+    # Help output goes to stderr
+    assert "P6-MCP" in captured.out
+    assert "serve" in captured.out
+    assert "inspect" in captured.out
+
+
+def test_cli_main_version(capsys):
+    """Test that CLI main function handles --version flag."""
+    with pytest.raises(SystemExit) as exc_info:
+        main(["--version"])
+    assert exc_info.value.code == 0
+
+    captured = capsys.readouterr()
+    assert "1.0.0" in captured.out
