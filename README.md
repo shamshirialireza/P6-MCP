@@ -187,5 +187,4 @@ See [client documentation](docs/clients/) for copy-paste configurations.
 - *Mutation tools require explicit `confirm=True` parameter for live P6 EPPM backend*
 - *XER backend supports all tools unless specifically noted as "Live backend only"*
 - *Live P6 EPPM backend supports all standard tools unless specifically noted as "Live P6 EPPM only"*
-
 ### 🏗️ Architecture
