@@ -1,11 +1,9 @@
 # P6-MCP
 
 [![PyPI](https://img.shields.io/pypi/v/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
-[![License](https://img.shields.io/pypi/l/p6-mcp.svg)](https://github.com/alirezashamshiri/P6-MCP/blob/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/alirezashamshiri/P6-MCP/ci.yml)](https://github.com/alirezashamshiri/P6-MCP/actions)
-[![Coverage](https://codecov.io/gh/alirezashamshiri/P6-MCP/branch/main/graph/badge.svg)](https://codecov.io/gh/alirezashamshiri/P6-MCP)
-[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-p6--mcp-brightgreen)](https://smithery.ai/@alirezashamshiri/p6-mcp)
+[![Python](https://img.shields.io/pypi/pyversions/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/alirezashamshiri/P6-MCP/blob/main/LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/alirezashamshiri/P6-MCP/ci.yml/badge.svg?branch=main)](https://github.com/alirezashamshiri/P6-MCP/actions)
 [![Smithery](https://img.shields.io/badge/Smithery-p6--mcp-brightgreen)](https://smithery.ai/@alirezashamshiri/p6-mcp)
 [![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue)](https://github.com/alirezashamshiri/P6-MCP/pkgs/container/p6-mcp)
 
