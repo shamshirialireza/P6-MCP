@@ -28,13 +28,16 @@ def _settings(args: argparse.Namespace) -> Settings:
     elif getattr(args, "file", None):
         overrides["allowed_dirs"] = [Path(args.file).expanduser().resolve().parent]
     elif getattr(args, "files", None):
-        overrides["allowed_dirs"] = list({
-            Path(f).expanduser().resolve().parent for f in args.files
-        })
+        overrides["allowed_dirs"] = list(
+            {Path(f).expanduser().resolve().parent for f in args.files}
+        )
     for flag, key in (
-        ("output_dir", "output_dir"), ("cache_size", "cache_size"),
-        ("max_output_bytes", "max_output_bytes"), ("log_level", "log_level"),
-        ("log_json", "log_json"), ("encoding", "default_encoding"),
+        ("output_dir", "output_dir"),
+        ("cache_size", "cache_size"),
+        ("max_output_bytes", "max_output_bytes"),
+        ("log_level", "log_level"),
+        ("log_json", "log_json"),
+        ("encoding", "default_encoding"),
         ("read_only", "read_only"),
     ):
         value = getattr(args, flag, None)
@@ -72,8 +75,15 @@ def cmd_serve(args: argparse.Namespace) -> int:
         return 0
     from p6_mcp.transport import run_http
 
-    run_http(mcp, settings, host=args.host, port=args.port, path=args.path,
-             transport=args.transport, cors_origins=args.cors_origin)
+    run_http(
+        mcp,
+        settings,
+        host=args.host,
+        port=args.port,
+        path=args.path,
+        transport=args.transport,
+        cors_origins=args.cors_origin,
+    )
     return 0
 
 
@@ -93,8 +103,12 @@ def cmd_inspect(args: argparse.Namespace) -> int:
         "header": sch.doc.header.to_dict(),
         "tables": {t.name: len(t.rows) for t in sch.doc.tables.values()},
         "projects": [
-            {"proj_id": p.proj_id, "name": p.short_name,
-             "baseline": p.is_baseline, "data_date": str(p.data_date)}
+            {
+                "proj_id": p.proj_id,
+                "name": p.short_name,
+                "baseline": p.is_baseline,
+                "data_date": str(p.data_date),
+            }
             for p in sch.projects
         ],
         "totals": {
@@ -112,8 +126,7 @@ def cmd_inspect(args: argparse.Namespace) -> int:
         f"Encoding:  {sch.doc.encoding}",
         f"P6 version {sch.doc.header.version}  exported {sch.doc.header.export_date}",
         "",
-        f"Projects:      {len(sch.projects)} "
-        f"({len(sch.baseline_projects)} baseline)",
+        f"Projects:      {len(sch.projects)} ({len(sch.baseline_projects)} baseline)",
         f"Activities:    {len(sch.activities)}",
         f"Relationships: {len(sch.relationships)}",
         f"Resources:     {len(sch.resources)}",
@@ -153,8 +166,7 @@ def cmd_dcma(args: argparse.Namespace) -> int:
             f"{'PASS' if c['passed'] else 'FAIL':<7} {metric:>9}  {c['threshold']}"
         )
     s = res["summary"]
-    lines += ["-" * 72,
-              f"Passed {s['passed']}/14  ({s['score_pct']}%)"]
+    lines += ["-" * 72, f"Passed {s['passed']}/14  ({s['score_pct']}%)"]
     failed = [c for c in res["checks"] if not c["passed"]]
     if failed and not args.json:
         lines += ["", "Failures:"]
@@ -172,8 +184,7 @@ def cmd_diff(args: argparse.Namespace) -> int:
 
     settings = _settings(args)
     loader = ScheduleLoader(settings, Workspace(settings))
-    res = diff_schedules(loader.load(args.current), loader.load(args.previous),
-                         args.match)
+    res = diff_schedules(loader.load(args.current), loader.load(args.previous), args.match)
     s = res["summary"]
     lines = [
         f"Diff: {Path(args.previous).name} -> {Path(args.current).name}",
@@ -217,9 +228,10 @@ def cmd_validate(args: argparse.Namespace) -> int:
 
 def cmd_evm(args: argparse.Namespace) -> int:
     """Calculate Earned Value Management metrics."""
+    from datetime import datetime
+
     from p6_mcp.repository import ScheduleLoader, Workspace
     from p6_mcp.services.analysis.earned_value import earned_value
-    from datetime import datetime
 
     settings = _settings(args)
     sch = ScheduleLoader(settings, Workspace(settings)).load(args.file)
@@ -273,12 +285,14 @@ def cmd_export(args: argparse.Namespace) -> int:
     if fmt == "xlsx":
         to_excel({args.dataset[:31]: rows}, target)
     else:
-        text = {"csv": to_csv, "json": to_json_text,
-                "markdown": to_markdown}[fmt](rows)
+        text = {"csv": to_csv, "json": to_json_text, "markdown": to_markdown}[fmt](rows)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding="utf-8")
-    _emit({"output_path": str(target), "rows": len(rows), "format": fmt},
-          args.json, f"Wrote {len(rows)} rows to {target}")
+    _emit(
+        {"output_path": str(target), "rows": len(rows), "format": fmt},
+        args.json,
+        f"Wrote {len(rows)} rows to {target}",
+    )
     return 0
 
 
@@ -297,40 +311,58 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
 
     def common(sp: argparse.ArgumentParser) -> None:
-        sp.add_argument("--allowed-dir", action="append",
-                        help="Directory .xer files may be read from (repeatable).")
+        sp.add_argument(
+            "--allowed-dir",
+            action="append",
+            help="Directory .xer files may be read from (repeatable).",
+        )
         sp.add_argument("--output-dir", help="Directory exports are written to.")
         sp.add_argument("--encoding", help="Force an encoding (cp1252, utf-8, ...).")
-        sp.add_argument("--log-level", default="WARNING",
-                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+        sp.add_argument(
+            "--log-level",
+            default="WARNING",
+            choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        )
         sp.add_argument("--json", action="store_true", help="Emit JSON instead of text.")
 
     serve = sub.add_parser("serve", help="Run the MCP server.")
-    serve.add_argument("--transport", default="stdio",
-                       choices=["stdio", "streamable-http", "sse"])
+    serve.add_argument("--transport", default="stdio", choices=["stdio", "streamable-http", "sse"])
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
     serve.add_argument("--path", default="/mcp", help="HTTP endpoint path.")
-    serve.add_argument("--allowed-dir", action="append",
-                       help="Directory .xer files may be read from (repeatable).")
+    serve.add_argument(
+        "--allowed-dir", action="append", help="Directory .xer files may be read from (repeatable)."
+    )
     serve.add_argument("--output-dir")
     serve.add_argument("--cache-size", type=int)
     serve.add_argument("--max-output-bytes", type=int)
     serve.add_argument("--encoding")
-    serve.add_argument("--log-level", default="INFO",
-                       choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+    serve.add_argument(
+        "--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    )
     serve.add_argument("--log-json", action="store_true")
-    serve.add_argument("--cors-origin", action="append",
-                       help="Allowed CORS origin for HTTP transports (repeatable).")
+    serve.add_argument(
+        "--cors-origin",
+        action="append",
+        help="Allowed CORS origin for HTTP transports (repeatable).",
+    )
     mutation = serve.add_mutually_exclusive_group()
-    mutation.add_argument("--enable-mutation", dest="enable_mutation",
-                          action="store_true", default=None,
-                          help="Allow write-back tools (off by default over HTTP).")
-    mutation.add_argument("--no-mutation", dest="enable_mutation",
-                          action="store_false",
-                          help="Disable write-back tools.")
-    serve.add_argument("--read-only", action="store_true",
-                       help="Hide every tool that writes to disk.")
+    mutation.add_argument(
+        "--enable-mutation",
+        dest="enable_mutation",
+        action="store_true",
+        default=None,
+        help="Allow write-back tools (off by default over HTTP).",
+    )
+    mutation.add_argument(
+        "--no-mutation",
+        dest="enable_mutation",
+        action="store_false",
+        help="Disable write-back tools.",
+    )
+    serve.add_argument(
+        "--read-only", action="store_true", help="Hide every tool that writes to disk."
+    )
     serve.set_defaults(func=cmd_serve, json=False)
 
     inspect_p = sub.add_parser("inspect", help="Summarize an XER file.")
@@ -347,8 +379,7 @@ def build_parser() -> argparse.ArgumentParser:
     diff = sub.add_parser("diff", help="Compare two XER files.")
     diff.add_argument("current")
     diff.add_argument("previous")
-    diff.add_argument("--match", default="short_name",
-                      choices=["short_name", "id", "guid"])
+    diff.add_argument("--match", default="short_name", choices=["short_name", "id", "guid"])
     common(diff)
     diff.set_defaults(func=cmd_diff, files=None)
 
@@ -388,8 +419,7 @@ def build_parser() -> argparse.ArgumentParser:
     export = sub.add_parser("export", help="Export a dataset.")
     export.add_argument("file")
     export.add_argument("--dataset", default="activities")
-    export.add_argument("--format", default="csv",
-                        choices=["csv", "json", "xlsx", "markdown"])
+    export.add_argument("--format", default="csv", choices=["csv", "json", "xlsx", "markdown"])
     export.add_argument("--output", help="Output file path.")
     export.add_argument("--project", help="Project short name.")
     export.add_argument("--table", help="Table name when dataset=raw_table.")

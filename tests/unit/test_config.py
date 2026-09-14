@@ -1,6 +1,5 @@
 """Unit tests for the configuration module."""
 
-import os
 import tempfile
 from pathlib import Path
 

@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING
 
 from p6_mcp.domain.base import Entity
 
 if TYPE_CHECKING:
-    from p6_mcp.parser.reader import Table
+    pass
+
 
 class Step(Entity):
     """One WBSSTEP row - WBS steps."""

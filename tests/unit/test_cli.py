@@ -1,6 +1,7 @@
 """Unit tests for the CLI module."""
 
 import pytest
+
 from p6_mcp.cli import main
 
 

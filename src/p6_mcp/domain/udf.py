@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING
 
 from p6_mcp.domain.base import Entity, label_of
 
 if TYPE_CHECKING:
-    from p6_mcp.parser.reader import Table
+    pass
+
 
 class UdfType(Entity):
     """One UDFTYPE row - UDF definitions."""
@@ -36,6 +36,7 @@ class UdfType(Entity):
     def label(self) -> str | None:
         # Map UDF data types to human readable labels
         from p6_mcp.domain.base import UDF_DATA_TYPE
+
         return label_of(UDF_DATA_TYPE, self.data_type)
 
     @property

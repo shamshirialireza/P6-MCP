@@ -1,9 +1,8 @@
 """Unit tests for the logging module."""
 
 import logging
-from unittest.mock import patch
 
-from p6_mcp.logging import get_logger, configure_logging
+from p6_mcp.logging import configure_logging, get_logger
 
 
 def test_get_logger_returns_logger():

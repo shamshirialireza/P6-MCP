@@ -1,7 +1,9 @@
 """Unit tests for the workspace module."""
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from p6_mcp.config import Settings
 from p6_mcp.exceptions import WorkspaceError
 from p6_mcp.repository.workspace import Workspace
@@ -22,16 +24,16 @@ def test_inside_allowed():
     workspace = Workspace(settings)
 
     # Test exact match
-    assert workspace._inside_allowed(Path("/allowed1")) == True
-    assert workspace._inside_allowed(Path("/allowed2")) == True
+    assert workspace._inside_allowed(Path("/allowed1"))
+    assert workspace._inside_allowed(Path("/allowed2"))
 
     # Test parent relationship
-    assert workspace._inside_allowed(Path("/allowed1/subdir")) == True
-    assert workspace._inside_allowed(Path("/allowed2/deep/nested")) == True
+    assert workspace._inside_allowed(Path("/allowed1/subdir"))
+    assert workspace._inside_allowed(Path("/allowed2/deep/nested"))
 
     # Test outside allowed
-    assert workspace._inside_allowed(Path("/notallowed")) == False
-    assert workspace._inside_allowed(Path("/etc/passwd")) == False
+    assert not workspace._inside_allowed(Path("/notallowed"))
+    assert not workspace._inside_allowed(Path("/etc/passwd"))
 
 
 def test_validate_read_absolute_path(tmp_path):
@@ -61,6 +63,7 @@ def test_validate_read_relative_path(tmp_path):
 
     # Change to tmp directory and validate relative path
     import os
+
     old_cwd = os.getcwd()
     try:
         os.chdir(str(tmp_path))

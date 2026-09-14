@@ -18,7 +18,6 @@ from p6_mcp.logging import get_logger
 from p6_mcp.parser.reader import XerReader
 from p6_mcp.repository.cache import LruCache
 from p6_mcp.repository.p6eppm.repository import P6EppmRepository
-from p6_mcp.repository.protocol import ScheduleRepository
 from p6_mcp.repository.workspace import Workspace
 
 log = get_logger("loader")
@@ -105,7 +104,7 @@ class ScheduleLoader:
         try:
             project_id = int(project_id_str)
         except ValueError:
-            raise ValueError(f"Project ID must be an integer: {project_id_str}")
+            raise ValueError(f"Project ID must be an integer: {project_id_str}") from None
 
         # Get or create P6 EPPM repository for this connection
         if connection_name not in self._p6_connections:
@@ -123,10 +122,11 @@ class ScheduleLoader:
 
         # Load the project from P6 EPPM
         try:
-            schedule_data = repository.load(project_id)
+            _ = repository.load(project_id)
             # For now, create a basic Schedule - this would be enhanced
             # to properly convert the P6 EPPM data to our Schedule format
             from p6_mcp.parser.reader import XerDocument
+
             doc = XerDocument(encoding="UTF-8")
             # TODO: Convert schedule_data to proper XerDocument format
             schedule_id = self._make_id(None, 0, 0)  # Placeholder for P6 schedules
@@ -137,7 +137,7 @@ class ScheduleLoader:
             raise NotFoundError(
                 f"Failed to load P6 project {project_id} from connection {connection_name}: {e}",
                 hint="Check connection name, project ID, and P6 EPPM availability.",
-            )
+            ) from e
 
     def open_schedules(self) -> list[Schedule]:
         """Schedules currently cached (for resources/list)."""
