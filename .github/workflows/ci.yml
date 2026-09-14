@@ -18,8 +18,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
         run: pip install uv
-      - name: Install dependencies
-        run: uv pip install --system -e ".[dev]"
+      - name: Install package and dev tools
+        run: |
+          uv pip install --system -e .
+          uv pip install --system ruff pytest pytest-cov hypothesis mypy
       - name: Lint
         run: python -m ruff check src/ tests/
       - name: Test
