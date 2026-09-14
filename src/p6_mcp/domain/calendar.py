@@ -26,7 +26,7 @@ class Calendar(Entity):
 
     __slots__ = ("_empty_workweek", "_parsed")
 
-    def __init__(self, table: object, row: list[str]) -> None:  # type: ignore[override]
+    def __init__(self, table: object, row: list[str]) -> None:
         super().__init__(table, row)  # type: ignore[arg-type]
         self._parsed: ParsedCalendar | None = None
         self._empty_workweek = False
@@ -43,7 +43,7 @@ class Calendar(Entity):
 
     @property
     def clndr_type(self) -> str | None:
-        return self.f("clndr_type")
+        return self.f("clndr_type")  # type: ignore[no-any-return]
 
     @property
     def type_label(self) -> str | None:

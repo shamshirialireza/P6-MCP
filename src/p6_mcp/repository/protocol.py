@@ -173,7 +173,7 @@ class MutableScheduleRepository(ScheduleRepository, Protocol):
         ...
 
     @abstractmethod
-    def run_job(self, job_type: str, project_id: int, **kwargs) -> str:
+    def run_job(self, job_type: str, project_id: int, **kwargs: Any) -> str:
         """Run a P6 job and return the job ID."""
         ...
 
