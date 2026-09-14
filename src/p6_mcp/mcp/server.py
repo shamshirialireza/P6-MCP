@@ -51,7 +51,7 @@ def build_server(settings: Settings | None = None) -> MCPServer:
         title="Primavera P6 XER",
         version=__version__,
         instructions=INSTRUCTIONS,
-        website_url="https://github.com/alirezashamshiri/P6-MCP",
+        website_url="https://github.com/shamshirialireza/P6-MCP",
         log_level=settings.log_level.upper(),  # type: ignore[arg-type]
     )
     register_all(mcp, ctx)

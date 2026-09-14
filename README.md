@@ -2,10 +2,10 @@
 
 [![PyPI](https://img.shields.io/pypi/v/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
 [![Python](https://img.shields.io/pypi/pyversions/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/alirezashamshiri/P6-MCP/blob/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/alirezashamshiri/P6-MCP/ci.yml/badge.svg?branch=main)](https://github.com/alirezashamshiri/P6-MCP/actions)
-[![Smithery](https://img.shields.io/badge/Smithery-p6--mcp-brightgreen)](https://smithery.ai/@alirezashamshiri/p6-mcp)
-[![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue)](https://github.com/alirezashamshiri/P6-MCP/pkgs/container/p6-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/shamshirialireza/P6-MCP/blob/main/LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/shamshirialireza/P6-MCP/ci.yml/badge.svg?branch=main)](https://github.com/shamshirialireza/P6-MCP/actions)
+[![Smithery](https://img.shields.io/badge/Smithery-p6--mcp-brightgreen)](https://smithery.ai/@shamshirialireza/p6-mcp)
+[![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue)](https://github.com/shamshirialireza/P6-MCP/pkgs/container/p6-mcp)
 
 ## Primavera P6 MCP Server
 
@@ -62,7 +62,7 @@ A fully featured MCP server for Oracle Primavera P6. Point any MCP-compatible AI
 
 **Docker (HTTP transport):**
 ```bash
-docker run -p 8000:8000 -v /path/to/xer:/data ghcr.io/alirezashamshiri/p6-mcp
+docker run -p 8000:8000 -v /path/to/xer:/data ghcr.io/shamshirialireza/p6-mcp
 ```
 
 **CLI:**
@@ -88,7 +88,7 @@ pip install p6-mcp
 pip install "p6-mcp[excel,charts,http]"
 
 # Docker
-docker pull ghcr.io/alirezashamshiri/p6-mcp:latest
+docker pull ghcr.io/shamshirialireza/p6-mcp:latest
 ```
 
 ---
@@ -160,4 +160,4 @@ See `.env.example` for a full template including P6 EPPM connection setup.
 
 ### 📄 License
 
-MIT © [Alireza Shamshiri](https://github.com/alirezashamshiri)
+MIT © [Alireza Shamshiri](https://github.com/shamshirialireza)
