@@ -3,6 +3,7 @@ FROM python:3.11-slim AS builder
 WORKDIR /build
 RUN pip install --no-cache-dir uv
 COPY pyproject.toml uv.lock* ./
+COPY README.md ./
 COPY src/ ./src/
 RUN uv pip install --system --no-cache ".[http]"
 
