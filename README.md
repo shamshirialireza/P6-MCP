@@ -6,6 +6,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/shamshirialireza/P6-MCP/ci.yml/badge.svg?branch=main)](https://github.com/shamshirialireza/P6-MCP/actions)
 [![Smithery](https://img.shields.io/badge/Smithery-p6--mcp-brightgreen)](https://smithery.ai/@shamshirialireza/p6-mcp)
 [![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue)](https://github.com/shamshirialireza/P6-MCP/pkgs/container/p6-mcp)
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/shamshirialireza/p6-mcp)
 <!-- mcp-name: io.github.shamshirialireza/p6-mcp -->
 
 ## Primavera P6 MCP Server
