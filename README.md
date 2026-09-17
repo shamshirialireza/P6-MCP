@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/shamshirialireza/P6-MCP/main/docs/assets/logo.png" alt="P6-MCP" width="160"/>
+</p>
+
 # P6-MCP
 
 [![PyPI](https://img.shields.io/pypi/v/p6-mcp.svg)](https://pypi.org/project/p6-mcp/)
