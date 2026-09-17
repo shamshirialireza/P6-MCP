@@ -28,9 +28,65 @@ A fully featured MCP server for Oracle Primavera P6. Point any MCP-compatible AI
 
 ---
 
-### 🚀 60-Second Quickstart
+## 🚀 Installation & Setup
 
-**Claude Desktop / Claude Code:**
+> **New to MCP?** Follow the step-by-step guide for your platform below. The whole setup takes under 5 minutes.
+
+### Prerequisites
+
+P6-MCP uses [`uv`](https://docs.astral.sh/uv/) to run — it handles everything automatically with no separate Python environment to manage.
+
+**Install `uv` first (if you don't have it):**
+
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# macOS with Homebrew
+brew install uv
+
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Once `uv` is installed, you can run P6-MCP directly with no further install step:
+
+```bash
+uvx p6-mcp
+```
+
+> Running `uvx p6-mcp` with no subcommand will print usage help — that means it's working correctly. See [CLI Usage](#cli-usage) for available commands.
+
+---
+
+### Option A: Claude Desktop (Recommended for most users)
+
+**Step 1 — Find or create your config file**
+
+| Platform | Config file location |
+|----------|----------------------|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+On macOS, open it directly from Terminal:
+
+```bash
+open -e ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+If the file doesn't exist yet:
+
+```bash
+# macOS
+mkdir -p ~/Library/Application\ Support/Claude
+touch ~/Library/Application\ Support/Claude/claude_desktop_config.json
+open -e ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+**Step 2 — Add the P6-MCP server**
+
+Add the `mcpServers` block to your config. If the file already has other servers, just add the `"p6-mcp"` entry inside the existing `"mcpServers"` object.
+
 ```json
 {
   "mcpServers": {
@@ -45,7 +101,28 @@ A fully featured MCP server for Oracle Primavera P6. Point any MCP-compatible AI
 }
 ```
 
-**Cursor / Windsurf / VS Code:**
+> **Important:** Set `P6MCP_WORKSPACE_DIRS` to the **folder** containing your `.xer` files, not the file itself.
+> Not sure where your XER files are? Run this in Terminal to find them:
+> ```bash
+> find ~ -name "*.xer" 2>/dev/null
+> ```
+
+**Step 3 — Restart Claude Desktop**
+
+Fully quit and reopen Claude Desktop. The P6-MCP tools will load automatically — no Terminal commands needed.
+
+**Step 4 — Verify it's working**
+
+In a new Claude chat, try:
+> *"List my XER files"*
+
+or drop a `.xer` file into the chat and ask:
+> *"Give me a project summary for this schedule"*
+
+---
+
+### Option B: Cursor / Windsurf / VS Code
+
 ```json
 {
   "mcp": {
@@ -60,43 +137,65 @@ A fully featured MCP server for Oracle Primavera P6. Point any MCP-compatible AI
 }
 ```
 
-**Docker (HTTP transport):**
+---
+
+### Option C: Docker (remote/server deployments)
+
 ```bash
 docker run -p 8000:8000 -v /path/to/xer:/data ghcr.io/shamshirialireza/p6-mcp
 ```
 
-**CLI:**
-```bash
-p6-mcp inspect schedule.xer       # table inventory and project list
-p6-mcp dcma schedule.xer          # DCMA 14-point report
-p6-mcp diff old.xer new.xer       # compare two schedules
-p6-mcp export schedule.xer --format xlsx --output report.xlsx
-```
-
 ---
 
-### 📦 Installation
+### Option D: pip (if you prefer a traditional install)
 
 ```bash
-# Recommended — no install needed, always latest
-uvx p6-mcp
-
-# pip
 pip install p6-mcp
 
 # With optional extras (Excel export, charts, HTTP transport)
 pip install "p6-mcp[excel,charts,http]"
-
-# Docker
-docker pull ghcr.io/shamshirialireza/p6-mcp:latest
 ```
 
 ---
 
-### 📊 Tool Groups
+## 🖥️ CLI Usage
+
+After installing, you can also use P6-MCP directly from the command line — no AI client needed:
+
+```bash
+p6-mcp inspect schedule.xer       # table inventory and project list
+p6-mcp dcma schedule.xer          # DCMA 14-point report
+p6-mcp diff old.xer new.xer       # compare two schedules
+p6-mcp validate schedule.xer      # structural validation
+p6-mcp evm schedule.xer           # earned value summary
+p6-mcp export schedule.xer --format xlsx --output report.xlsx
+```
+
+> Running `p6-mcp` with no subcommand shows the help message — this is expected and means the tool is installed correctly.
+
+---
+
+## ⚙️ Configuration
+
+All configuration is done via environment variables, either in your MCP client's config file or in a `.env` file (see `.env.example` for a full template).
+
+| Variable | Default | Description |
+|---|---|---|
+| `P6MCP_WORKSPACE_DIRS` | — | Colon-separated directories containing XER files. **Required for XER mode.** |
+| `P6MCP_OUTPUT_DIR` | `/tmp/p6mcp_output` | Where exports and reports are written |
+| `P6MCP_ENABLE_MUTATION` | `false` | Set to `true` to enable write-back tools |
+| `P6MCP_AUTH_TOKEN` | — | Bearer token for HTTP transport |
+| `P6MCP_CACHE_SIZE` | `10` | Number of schedules to keep in memory |
+| `P6MCP_LOG_JSON` | `false` | Emit structured JSON logs |
+
+See `.env.example` for a full template including P6 EPPM connection setup.
+
+---
+
+## 📊 Tool Groups
 
 | Group | Tools |
-|-------|-------|
+|---|---|
 | **File & Workspace** | list_xer_files, open_schedule, validate_xer, get_file_header, get_table_inventory, get_raw_table, clear_cache |
 | **Projects & EPS** | get_projects, get_project_detail, get_project_codes, get_schedule_options, get_data_date |
 | **WBS** | get_wbs, get_wbs_detail, get_wbs_rollup, get_wbs_budgets, get_wbs_notes, get_wbs_steps |
@@ -116,10 +215,10 @@ docker pull ghcr.io/shamshirialireza/p6-mcp:latest
 
 ---
 
-### 🔌 Backend Support
+## 🔌 Backend Support
 
 | Capability | XER Files | Live P6 EPPM |
-|------------|:---------:|:------------:|
+|---|:---:|:---:|
 | Read schedule data | ✅ | ✅ |
 | Critical path & float | ✅ | ✅ |
 | DCMA 14-point assessment | ✅ | ✅ |
@@ -134,30 +233,35 @@ docker pull ghcr.io/shamshirialireza/p6-mcp:latest
 
 ---
 
-### ⚙️ Configuration
+## 🔒 Security
 
-| Environment Variable | Default | Description |
-|---------------------|---------|-------------|
-| `P6MCP_WORKSPACE_DIRS` | — | Colon-separated directories containing XER files |
-| `P6MCP_OUTPUT_DIR` | `/tmp/p6mcp_output` | Where exports and reports are written |
-| `P6MCP_ENABLE_MUTATION` | `false` | Enable write-back tools |
-| `P6MCP_AUTH_TOKEN` | — | Bearer token for HTTP transport |
-| `P6MCP_CACHE_SIZE` | `10` | Number of schedules to keep in memory |
-| `P6MCP_LOG_JSON` | `false` | Emit structured JSON logs |
-
-See `.env.example` for a full template including P6 EPPM connection setup.
-
----
-
-### 🔒 Security
-
-- XER file access restricted to `P6MCP_WORKSPACE_DIRS` — path traversal blocked
-- Mutation disabled by default; requires `P6MCP_ENABLE_MUTATION=true` plus `confirm=True` per call
+- XER file access is restricted to `P6MCP_WORKSPACE_DIRS` — path traversal is blocked
+- Mutation is disabled by default; requires `P6MCP_ENABLE_MUTATION=true` plus `confirm=True` per call
 - HTTP transport supports bearer token auth via `P6MCP_AUTH_TOKEN`
-- P6 EPPM credentials never logged
+- P6 EPPM credentials are never logged
 
 ---
 
-### 📄 License
+## 🛠️ Troubleshooting
+
+**`p6-mcp: error: the following arguments are required: command`**
+This is expected — it means P6-MCP is installed and working. You just need to provide a subcommand like `inspect`, `dcma`, or `serve`. See [CLI Usage](#cli-usage).
+
+**Tools not appearing in Claude Desktop**
+Make sure you fully quit and reopened Claude Desktop after editing the config. Also verify your JSON is valid (no trailing commas) and that `P6MCP_WORKSPACE_DIRS` points to an existing folder.
+
+**Can't find your XER files?**
+Run this in Terminal to locate them:
+```bash
+find ~ -name "*.xer" 2>/dev/null
+```
+
+**Using P6-MCP in claude.ai (browser)**
+The claude.ai interface defers tool loading. If you see an error like `has not been loaded yet`, this is normal — P6-MCP tools load on demand in that environment. In **Claude Desktop**, tools load automatically with no extra steps.
+
+---
+
+## 📄 License
 
 MIT © [Alireza Shamshiri](https://github.com/shamshirialireza)
+
