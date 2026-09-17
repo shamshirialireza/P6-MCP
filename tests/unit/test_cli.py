@@ -30,4 +30,4 @@ def test_cli_main_version(capsys):
     assert exc_info.value.code == 0
 
     captured = capsys.readouterr()
-    assert "1.0.0" in captured.out
+    assert "1.0.2" in captured.out
